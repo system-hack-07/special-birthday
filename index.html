@@ -96,7 +96,7 @@
 
     .gift-emoji { font-size: 5.5rem; margin: 25px 0; cursor: pointer; display: inline-block; }
 
-    /* POLAROID & GALLERY CAROUSEL */
+    /* POLAROID GALLERY */
     .polaroid-frame {
       background: #fff; color: #222; padding: 12px 12px 20px 12px;
       border-radius: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); transform: rotate(-2deg); margin: 15px auto; max-width: 270px;
@@ -154,7 +154,7 @@
           <input type="file" id="in-photos" multiple accept="image/*" onchange="readPhotos(event)">
         </div>
 
-        <button class="btn-action" onclick="generateLink()">✨ Generate Animated Link</button>
+        <button class="btn-action" id="gen-btn" onclick="generateLink()">✨ Generate Animated Link</button>
 
         <div id="share-output" class="hidden" style="margin-top:20px;">
           <p style="font-size: 0.75rem; color: var(--accent); word-break: break-all;" id="share-url"></p>
@@ -259,7 +259,7 @@
     let currentScene = 1;
     let payload = null;
 
-    /* CANVAS BACKGROUND ENGINE */
+    /* BACKGROUND ANIMATION ENGINE */
     const canvas = document.getElementById('space-canvas');
     const ctx = canvas.getContext('2d');
     let stars = [];
@@ -296,14 +296,43 @@
     }
     renderLoop();
 
-    /* FILE INPUT LOGIC FOR UP TO 5 PHOTOS */
+    /* HIGH-PERFORMANCE IMAGE COMPRESSOR (KEEPS URL SMALL & COMPACT) */
     function readPhotos(e) {
       const files = Array.from(e.target.files).slice(0, 5);
       uploadedPhotos = [];
-      document.getElementById('photo-count-label').innerText = `Upload Photos (${files.length} selected / max 5)`;
+      document.getElementById('photo-count-label').innerText = `Processing (${files.length} photos)...`;
+      
+      let processed = 0;
       files.forEach(file => {
+        const img = new Image();
         const reader = new FileReader();
-        reader.onload = (evt) => uploadedPhotos.push(evt.target.result);
+        
+        reader.onload = (evt) => { img.src = evt.target.result; };
+        img.onload = () => {
+          const cvs = document.createElement('canvas');
+          const cCtx = cvs.getContext('2d');
+          
+          const maxDim = 260; 
+          let w = img.width;
+          let h = img.height;
+          if (w > h) {
+            if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+          } else {
+            if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
+          }
+          
+          cvs.width = w;
+          cvs.height = h;
+          cCtx.drawImage(img, 0, 0, w, h);
+          
+          const compressedDataUrl = cvs.toDataURL('image/jpeg', 0.45);
+          uploadedPhotos.push(compressedDataUrl);
+          
+          processed++;
+          if (processed === files.length) {
+            document.getElementById('photo-count-label').innerText = `Upload Photos (${files.length} ready / max 5)`;
+          }
+        };
         reader.readAsDataURL(file);
       });
     }
@@ -389,8 +418,6 @@
           }
         }
         runTypewriter();
-
-        // Auto slideshow every 3.5 seconds
         setInterval(() => nextPhoto(), 3500);
       }
       if (stageIndex === 6) {
