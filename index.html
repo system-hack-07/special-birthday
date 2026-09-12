@@ -95,11 +95,6 @@
     .gallery-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
     .g-btn { background: rgba(0,0,0,0.1); border: none; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 0.75rem; cursor: pointer; color: #333; }
 
-    .timer-row { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
-    .t-box { background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 8px; border-radius: 12px; min-width: 58px; }
-    .t-val { font-size: 1.2rem; font-weight: 800; color: var(--accent); }
-    .t-lbl { font-size: 0.55rem; text-transform: uppercase; color: var(--subtext); }
-
     .letter-paper { font-family: 'Dancing Script', cursive; font-size: 1.35rem; color: var(--accent); min-height: 90px; max-height: 140px; overflow-y: auto; line-height: 1.4; margin: 12px 0; padding: 10px; background: rgba(0,0,0,0.15); border-radius: 10px; border: 1px solid var(--border); }
 
     .loader-overlay { position: fixed; inset: 0; background: rgba(5,3,10,0.85); z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
@@ -139,9 +134,9 @@
           <h2 class="title-main" style="font-size: 1.3rem;">Birthday Profile</h2>
           <p class="subtitle">Enter the celebration details for your recipient.</p>
 
-          <div class="form-group"><label>Recipient Name *</label><input type="text" id="c-name" placeholder="e.g. Aarav"></div>
+          <div class="form-group"><label>Recipient Name *</label><input type="text" id="c-name" placeholder="e.g. Samarth"></div>
           <div class="form-group"><label>Turning Age</label><input type="number" id="c-age" placeholder="e.g. 21"></div>
-          <div class="form-group"><label>Sender Name *</label><input type="text" id="c-sender" placeholder="e.g. Priya"></div>
+          <div class="form-group"><label>Sender Name *</label><input type="text" id="c-sender" placeholder="e.g. Friend"></div>
           <div class="form-group"><label>Heartfelt Message</label><textarea id="c-msg" rows="3" placeholder="Write your birthday wish..."></textarea></div>
           
           <button class="btn-main" onclick="setWizardStep(2)">Next: Photos 📸</button>
@@ -177,7 +172,7 @@
           </div>
 
           <div style="margin-top: 20px;">
-            <button class="btn-main" onclick="publishBirthdayPage()">🚀 Publish Surprise Link</button>
+            <button class="btn-main" onclick="publishBirthdayPage()">🚀 Generate Animated Link</button>
             <button class="btn-main" style="background:rgba(255,255,255,0.1);" onclick="setWizardStep(2)">Back</button>
           </div>
         </div>
@@ -265,6 +260,16 @@
       </div>
     </div>
 
+    <!-- ERROR / NOT FOUND SCREEN -->
+    <div id="scene-error" class="screen">
+      <div class="cinematic-box">
+        <div style="font-size: 4rem; margin-bottom: 12px;">⚠️</div>
+        <h1 class="title-main" style="font-size: 1.8rem;">Birthday Surprise Not Found</h1>
+        <p class="subtitle" id="error-message-text">The link you opened is invalid or has expired.</p>
+        <button class="btn-main" onclick="location.hash=''; location.reload();">Create New Surprise ✨</button>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -334,28 +339,69 @@
       cont.innerHTML = photosList.map((src, i) => `<div class="photo-thumb"><img src="${src}"><button onclick="photosList.splice(${i},1);renderPreviews()">✕</button></div>`).join('');
     }
 
+    // Generate unique slug/ID from name + random suffix (e.g. samarth-a82k9)
+    function generateSlug(name) {
+      const cleanName = (name || "birthday").toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').slice(0, 15);
+      const randSuffix = Math.random().toString(36).substring(2, 7);
+      return `${cleanName}-${randSuffix}`;
+    }
+
     async function publishBirthdayPage() {
-      showLoader("Publishing Surprise...");
-      state.name = document.getElementById('c-name').value;
-      state.age = document.getElementById('c-age').value;
-      state.sender = document.getElementById('c-sender').value || "A Friend";
-      state.msg = document.getElementById('c-msg').value || "Wishing you a wonderful day!";
+      const nameVal = document.getElementById('c-name').value.trim();
+      if (!nameVal) {
+        alert("Please enter a recipient name.");
+        return;
+      }
+
+      showLoader("Creating your birthday link...");
+
+      state.name = nameVal;
+      state.age = document.getElementById('c-age').value.trim();
+      state.sender = document.getElementById('c-sender').value.trim() || "A Friend";
+      state.msg = document.getElementById('c-msg').value.trim() || "Wishing you a wonderful day!";
       state.photos = photosList.length ? photosList : ["https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80"];
 
+      // 1. Generate unique ID/slug from name
+      const birthdayId = generateSlug(state.name);
+
+      // CRITICAL VALIDATION CHECK BEFORE PROCEEDING
+      if (!birthdayId || birthdayId === "undefined" || birthdayId === "null" || birthdayId === "[object Object]") {
+        hideLoader();
+        console.error("Link generation failed due to invalid ID structure:", birthdayId);
+        alert("Unable to create your birthday link. Please try again.");
+        return;
+      }
+
+      // Attach ID explicitly to data payload model
+      state.id = birthdayId;
+
       try {
-        const res = await fetch(DB_ENDPOINT, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(state) });
-        const json = await res.json();
-        const link = `${window.location.origin}${window.location.pathname}#/${json.id}`;
-        localStorage.setItem(`bday_${json.id}`, JSON.stringify(state));
+        // Save to remote backend storage (ExtendsClass)
+        const res = await fetch(DB_ENDPOINT, { 
+          method: 'POST', 
+          headers: {'Content-Type': 'application/json'}, 
+          body: JSON.stringify(state) 
+        });
         
+        if (!res.ok) throw new Error(`Server responded with status ${res.status}`);
+        
+        // Save backup copy to local storage using the exact same ID key
+        localStorage.setItem(`bday_${birthdayId}`, JSON.stringify(state));
+
+        // Construct exact valid URL using '#/birthday/<id>' format pattern
+        const cleanBaseUrl = window.location.origin + window.location.pathname;
+        const finalUrl = `${cleanBaseUrl}#/birthday/${birthdayId}`;
+
         hideLoader();
-        document.getElementById('final-share-url').innerText = link;
+        document.getElementById('final-share-url').innerText = finalUrl;
         document.getElementById('qrcode-container').innerHTML = "";
-        new QRCode(document.getElementById('qrcode-container'), { text: link, width: 100, height: 100 });
+        new QRCode(document.getElementById('qrcode-container'), { text: finalUrl, width: 100, height: 100 });
         setWizardStep(4);
-      } catch(e) {
+
+      } catch (err) {
         hideLoader();
-        alert("Publishing error. Try again.");
+        console.error("Detailed Link Generation Error:", err);
+        alert("Unable to create your birthday link. Please try again.");
       }
     }
 
@@ -369,14 +415,15 @@
     }
 
     function resetStudio() {
-      location.hash = ''; location.reload();
+      window.location.hash = '';
+      window.location.reload();
     }
 
     function toggleLivePreview() {
       loadExperience({
-        name: document.getElementById('c-name').value || "Aarav",
+        name: document.getElementById('c-name').value || "Samarth",
         age: document.getElementById('c-age').value || "21",
-        sender: document.getElementById('c-sender').value || "Priya",
+        sender: document.getElementById('c-sender').value || "Friend",
         msg: document.getElementById('c-msg').value || "Wishing you an amazing year ahead!",
         photos: photosList.length ? photosList : ["https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80"],
         theme: state.theme
@@ -390,7 +437,8 @@
       document.getElementById('rec-age-subtitle').innerText = data.age ? `Turning ${data.age} Years ✨` : "";
       document.getElementById('rec-finale-title').innerText = `Happy Birthday, ${data.name}! 🎉`;
       document.getElementById('rec-finale-sub').innerText = data.msg;
-      photosList = data.photos;
+      photosList = data.photos || [];
+      photoIdx = 0;
       updatePhoto();
 
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -400,8 +448,8 @@
     function advanceScene(idx) {
       const curr = document.querySelector('.screen.active');
       const next = document.getElementById(`scene-${idx}`);
-      curr.classList.remove('active');
-      next.classList.add('active');
+      if (curr) curr.classList.remove('active');
+      if (next) next.classList.add('active');
       if(idx === 1 || idx === 5) confetti({ particleCount: 70, spread: 70 });
       if(idx === 4) {
         let i = 0, m = document.getElementById('rec-finale-sub').innerText;
@@ -428,6 +476,7 @@
     }
 
     function shiftPhoto(d) {
+      if(!photosList.length) return;
       photoIdx = (photoIdx + d + photosList.length) % photosList.length;
       updatePhoto();
     }
@@ -438,31 +487,59 @@
     }
     function hideLoader() { document.getElementById('app-loader').classList.add('hidden'); }
 
-    // Bulletproof hash router check (handles empty routes or `#/undefined` safely)
-    window.onload = async () => {
+    function showNotFoundError(msg) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      if (msg) document.getElementById('error-message-text').innerText = msg;
+      document.getElementById('scene-error').classList.add('active');
+    }
+
+    // STRICT ROUTER ROUTINE & URL HASH PARSER
+    async function handleRouting() {
       const hash = window.location.hash.trim();
-      if (hash && hash.includes('/')) {
-        const id = hash.split('/')[1];
-        if (!id || id === 'undefined' || id === 'null') {
-          window.location.hash = '';
+      
+      if (hash.startsWith('#/birthday/')) {
+        const birthdayId = hash.replace('#/birthday/', '').trim();
+
+        if (!birthdayId || birthdayId === "undefined" || birthdayId === "null" || birthdayId === "[object Object]") {
+          showNotFoundError("The link format is invalid.");
           return;
         }
-        showLoader("Loading Surprise...");
+
+        showLoader("Loading Birthday Surprise...");
+
         try {
-          let data = JSON.parse(localStorage.getItem(`bday_${id}`) || 'null');
+          let data = JSON.parse(localStorage.getItem(`bday_${birthdayId}`) || 'null');
+
           if (!data) {
-            const res = await fetch(`${DB_ENDPOINT}/${id}`);
-            if (!res.ok) throw new Error();
+            const res = await fetch(`${DB_ENDPOINT}/${birthdayId}`);
+            if (!res.ok) {
+              throw new Error("Birthday data record not found on server.");
+            }
             data = await res.json();
           }
+
           hideLoader();
-          if (data && data.name) { loadExperience(data); return; }
-        } catch(e) {
+
+          if (data && data.name) {
+            loadExperience(data);
+          } else {
+            showNotFoundError("Birthday data record could not be parsed.");
+          }
+
+        } catch (err) {
           hideLoader();
-          alert("Link expired or invalid. Opening Creator Studio.");
-          window.location.hash = '';
+          console.error("Routing Resolution Error:", err);
+          showNotFoundError("Birthday Surprise Not Found. The link may have expired or is incorrect.");
         }
+      } else if (hash !== "" && hash !== "#") {
+        showNotFoundError("Birthday Surprise Not Found.");
       }
+    }
+
+    window.addEventListener('hashchange', handleRouting);
+
+    window.onload = () => {
+      handleRouting();
     };
   </script>
 </body>
