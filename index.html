@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Special Birthday Celebration</title>
+  <title>A Special Surprise For You ✨</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Plus+Jakarta+Sans:wght@400;600;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -13,241 +14,373 @@
   <style>
     :root {
       --primary: #ff2e93;
+      --secondary: #8a2be2;
       --accent: #ffd700;
-      --bg-dark: #0a0612;
-      --glass: rgba(255, 255, 255, 0.08);
-      --glass-border: rgba(255, 255, 255, 0.18);
+      --bg-dark: #080314;
+      --glass-bg: rgba(255, 255, 255, 0.07);
+      --glass-border: rgba(255, 255, 255, 0.15);
       --text-main: #ffffff;
-      --text-sub: #e5d9f2;
+      --text-sub: #d4c5eb;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
 
-    body {
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       background: var(--bg-dark);
       color: var(--text-main);
-      min-height: 100vh;
-      overflow-x: hidden;
+    }
+
+    /* BACKGROUND ANIMATION CANVAS */
+    #fx-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 30%, #2a0845 0%, #080314 85%);
+    }
+
+    /* MOBILE CONTAINER */
+    .app-viewport {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      z-index: 1;
       display: flex;
       justify-content: center;
       align-items: center;
+      padding: 16px;
     }
 
-    #space-canvas {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      z-index: 0; pointer-events: none;
-      background: radial-gradient(circle at 50% 50%, #200536 0%, #0a0612 100%);
-    }
-
-    .app-viewport {
-      width: 100%; max-width: 420px; min-height: 100vh;
-      position: relative; z-index: 1; padding: 20px 16px;
-      display: flex; flex-direction: column; justify-content: center;
-    }
-
-    .glass-box {
-      background: var(--glass);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+    .scene-card {
+      width: 100%;
+      max-width: 380px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
       border: 1px solid var(--glass-border);
-      border-radius: 28px;
-      padding: 24px 20px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+      border-radius: 32px;
+      padding: 28px 22px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255,255,255,0.2);
       text-align: center;
+      position: absolute;
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.9) translateY(20px);
+      transition: none;
     }
 
-    h1, h2 { font-family: 'Fredoka', cursive; text-shadow: 0 0 20px rgba(255, 46, 147, 0.6); }
-
-    .form-group { margin-bottom: 14px; text-align: left; }
-    label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--text-sub); margin-bottom: 6px; }
-
-    input, textarea {
-      width: 100%; padding: 14px; border-radius: 16px;
-      border: 1px solid var(--glass-border); background: rgba(0, 0, 0, 0.4);
-      color: #fff; font-size: 0.9rem; outline: none; transition: 0.3s;
-    }
-    input:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(255,46,147,0.4); }
-
-    .btn-action {
-      width: 100%; background: linear-gradient(135deg, #ff2e93 0%, #ff8a00 100%);
-      color: #fff; border: none; padding: 16px; border-radius: 50px;
-      font-size: 1rem; font-weight: 800; cursor: pointer;
-      box-shadow: 0 10px 30px rgba(255, 46, 147, 0.4); transition: transform 0.2s;
-    }
-    .btn-action:active { transform: scale(0.96); }
-
-    .scene { display: none; width: 100%; }
-    .scene.active { display: block; }
-
-    /* ANIMATED ELEMENTS */
-    .hero-title {
-      font-size: 2.6rem; line-height: 1.15; margin: 15px 0;
-      background: linear-gradient(to right, #fff, #ffd700, #ff2e93);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    .scene-card.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
     }
 
-    .cake-stage { position: relative; width: 140px; height: 140px; margin: 25px auto; cursor: pointer; }
-    .cake-emoji { font-size: 6rem; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
-    .flame-emoji {
-      position: absolute; top: 5px; left: 50%; transform: translateX(-50%);
-      font-size: 1.8rem; animation: glow 0.4s infinite alternate; filter: drop-shadow(0 0 12px #ff8a00);
+    /* TYPOGRAPHY */
+    .title-cinematic {
+      font-family: 'Fredoka', cursive;
+      font-size: 2.2rem;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #ffffff 0%, #ffd700 50%, #ff2e93 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(255, 46, 147, 0.4);
+      margin-bottom: 12px;
     }
-    @keyframes glow { 0% { opacity: 0.8; transform: translateX(-50%) scale(0.95); } 100% { opacity: 1; transform: translateX(-50%) scale(1.15); } }
 
-    .gift-emoji { font-size: 5.5rem; margin: 25px 0; cursor: pointer; display: inline-block; }
+    .sub-text {
+      color: var(--text-sub);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
 
-    /* POLAROID GALLERY */
-    .polaroid-frame {
-      background: #fff; color: #222; padding: 12px 12px 20px 12px;
-      border-radius: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.6); transform: rotate(-2deg); margin: 15px auto; max-width: 270px;
+    /* FORM STYLES */
+    .form-group {
+      margin-bottom: 14px;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid var(--glass-border);
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 15px rgba(255, 46, 147, 0.3);
+    }
+
+    /* BUTTONS */
+    .btn-glow {
+      width: 100%;
+      background: linear-gradient(135deg, #ff2e93 0%, #ff8a00 100%);
+      color: #fff;
+      border: none;
+      padding: 16px 24px;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(255, 46, 147, 0.5);
       position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
-    .polaroid-frame img { width: 100%; height: 210px; object-fit: cover; border-radius: 4px; transition: opacity 0.3s ease; }
-    .gallery-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
-    .nav-btn {
-      background: rgba(0,0,0,0.1); border: none; color: #333; font-weight: 800;
-      padding: 4px 12px; border-radius: 12px; cursor: pointer; font-size: 0.8rem;
+    .btn-glow:active { transform: scale(0.96); }
+
+    /* COUNTDOWN GRID */
+    .timer-grid {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .timer-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--glass-border);
+      padding: 10px;
+      border-radius: 16px;
+      min-width: 65px;
+    }
+    .timer-num {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .timer-lbl {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      color: var(--text-sub);
     }
 
-    .timer-row { display: flex; justify-content: center; gap: 8px; margin: 16px 0; }
-    .timer-block { background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); padding: 8px; border-radius: 12px; min-width: 58px; }
-    .timer-val { font-size: 1.2rem; font-weight: 800; color: var(--accent); }
-    .timer-lbl { font-size: 0.6rem; text-transform: uppercase; color: var(--text-sub); }
+    /* CANDLE STAGE */
+    .cake-container {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin: 20px auto;
+      cursor: pointer;
+    }
+    .cake-base { font-size: 6rem; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
+    .flame-icon {
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 2rem;
+      animation: flameFlicker 0.4s infinite alternate;
+      filter: drop-shadow(0 0 15px #ff8a00);
+    }
+    @keyframes flameFlicker {
+      0% { transform: translateX(-50%) scale(0.9) rotate(-2deg); opacity: 0.8; }
+      100% { transform: translateX(-50%) scale(1.1) rotate(2deg); opacity: 1; }
+    }
+
+    /* GIFT BOX STAGE */
+    .gift-container {
+      font-size: 6rem;
+      margin: 20px 0;
+      cursor: pointer;
+      display: inline-block;
+      transition: transform 0.2s;
+    }
+
+    /* POLAROID CAROUSEL */
+    .polaroid-card {
+      background: #ffffff;
+      padding: 12px 12px 24px 12px;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+      transform: rotate(-2deg);
+      margin: 15px auto;
+      max-width: 260px;
+    }
+    .polaroid-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 6px;
+      transition: opacity 0.3s ease;
+    }
+    .carousel-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .carousel-btn {
+      background: rgba(0,0,0,0.08);
+      border: none;
+      padding: 6px 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      color: #333;
+      cursor: pointer;
+    }
+
+    /* TYPEWRITER LETTER */
+    .typewriter-box {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.4rem;
+      color: var(--accent);
+      min-height: 80px;
+      margin: 15px 0;
+      line-height: 1.4;
+    }
 
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <canvas id="space-canvas"></canvas>
+  <!-- FX BACKGROUND CANVAS -->
+  <canvas id="fx-canvas"></canvas>
 
   <div class="app-viewport">
 
-    <!-- FORM CREATOR STAGE -->
-    <div id="scene-creator" class="scene active">
-      <div class="glass-box">
-        <h1>Birthday Generator</h1>
-        <p style="font-size: 0.85rem; color: var(--text-sub); margin-bottom: 20px;">Design a dynamic interactive birthday surprise experience.</p>
+    <!-- CREATOR SCENE -->
+    <div id="scene-creator" class="scene-card active">
+      <h1 class="title-cinematic">Surprise Studio</h1>
+      <p class="sub-text">Create an interactive animated birthday movie link.</p>
 
-        <div class="form-group">
-          <label>Birthday Person Name *</label>
-          <input type="text" id="in-name" placeholder="e.g. Shridha">
-        </div>
+      <div class="form-group">
+        <label>Birthday Person Name *</label>
+        <input type="text" id="in-name" placeholder="e.g. Shridha">
+      </div>
 
-        <div class="form-group">
-          <label>Turning Age (Optional)</label>
-          <input type="number" id="in-age" placeholder="e.g. 20">
-        </div>
+      <div class="form-group">
+        <label>Turning Age (Optional)</label>
+        <input type="number" id="in-age" placeholder="e.g. 21">
+      </div>
 
-        <div class="form-group">
-          <label>Birthday Target Date</label>
-          <input type="datetime-local" id="in-date">
-        </div>
+      <div class="form-group">
+        <label>Birthday Date</label>
+        <input type="datetime-local" id="in-date">
+      </div>
 
-        <div class="form-group">
-          <label>Personal Letter</label>
-          <textarea id="in-msg" rows="3" placeholder="Write your heartfelt message..."></textarea>
-        </div>
+      <div class="form-group">
+        <label>Personal Wish / Letter</label>
+        <textarea id="in-msg" rows="3" placeholder="Write something heartfelt..."></textarea>
+      </div>
 
-        <div class="form-group">
-          <label id="photo-count-label">Upload Photos (Up to 5)</label>
-          <input type="file" id="in-photos" multiple accept="image/*" onchange="readPhotos(event)">
-        </div>
+      <div class="form-group">
+        <label id="photo-label">Upload Photos (Max 5)</label>
+        <input type="file" id="in-photos" multiple accept="image/*" onchange="processPhotos(event)">
+      </div>
 
-        <button class="btn-action" id="gen-btn" onclick="generateLink()">✨ Generate Animated Link</button>
+      <button class="btn-glow" onclick="generateLink()">✨ Generate Animated Link</button>
 
-        <div id="share-output" class="hidden" style="margin-top:20px;">
-          <p style="font-size: 0.75rem; color: var(--accent); word-break: break-all;" id="share-url"></p>
-          <div id="qrcode" style="display:flex; justify-content:center; margin:12px 0;"></div>
-          <button class="btn-action" style="padding:10px; font-size:0.85rem;" onclick="copyLink()">📋 Copy Link</button>
-        </div>
+      <div id="share-box" class="hidden" style="margin-top: 18px;">
+        <p style="font-size: 0.75rem; color: var(--accent); word-break: break-all;" id="share-url-text"></p>
+        <div id="qrcode" style="display:flex; justify-content:center; margin: 12px 0;"></div>
+        <button class="btn-glow" style="padding:10px;" onclick="copyLink()">📋 Copy Link</button>
       </div>
     </div>
 
-    <!-- RECIPIENT SCENE 1: ENVELOPE OPENING -->
-    <div id="scene-1" class="scene">
-      <div class="glass-box" onclick="transitionTo(2)">
-        <div style="font-size: 4.5rem; margin-bottom: 12px;">💌</div>
-        <h2>You Have a Surprise!</h2>
-        <p style="color: var(--text-sub); font-size: 0.85rem; margin-top: 8px;">Tap anywhere to unveil your birthday card</p>
+    <!-- RECIPIENT SCENE 1: ENVELOPE INTRO -->
+    <div id="scene-1" class="scene-card">
+      <div style="font-size: 5rem; margin-bottom: 10px; filter: drop-shadow(0 0 20px rgba(255,46,147,0.6));">💌</div>
+      <h1 class="title-cinematic">A Surprise Awaits!</h1>
+      <p class="sub-text">A special celebration has been crafted exclusively for you.</p>
+      <button class="btn-glow" onclick="goToScene(2)">Open Surprise ✨</button>
+    </div>
+
+    <!-- RECIPIENT SCENE 2: HERO & COUNTDOWN -->
+    <div id="scene-2" class="scene-card">
+      <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent);">Celebrating You</p>
+      <h1 class="title-cinematic" id="view-name">Happy Birthday!</h1>
+      <p class="sub-text" id="view-age"></p>
+
+      <div class="timer-grid">
+        <div class="timer-box"><div class="timer-num" id="t-d">00</div><div class="timer-lbl">Days</div></div>
+        <div class="timer-box"><div class="timer-num" id="t-h">00</div><div class="timer-lbl">Hours</div></div>
+        <div class="timer-box"><div class="timer-num" id="t-m">00</div><div class="timer-lbl">Mins</div></div>
+        <div class="timer-box"><div class="timer-num" id="t-s">00</div><div class="timer-lbl">Secs</div></div>
+      </div>
+
+      <button class="btn-glow" onclick="goToScene(3)">Make a Wish 🎂</button>
+    </div>
+
+    <!-- RECIPIENT SCENE 3: INTERACTIVE CAKE -->
+    <div id="scene-3" class="scene-card">
+      <h1 class="title-cinematic">Make a Wish</h1>
+      <p class="sub-text">Tap the candle flame to blow it out!</p>
+
+      <div class="cake-container" onclick="blowFlame()">
+        <span class="flame-icon" id="flame-el">🔥</span>
+        <span class="cake-base">🎂</span>
+      </div>
+
+      <button id="btn-to-gift" class="btn-glow hidden" onclick="goToScene(4)">Unwrap Present 🎁</button>
+    </div>
+
+    <!-- RECIPIENT SCENE 4: INTERACTIVE GIFT -->
+    <div id="scene-4" class="scene-card">
+      <h1 class="title-cinematic">Your Gift Box</h1>
+      <p class="sub-text">Tap the gift box to open your surprise!</p>
+
+      <div class="gift-container" id="gift-el" onclick="openGift()">🎁</div>
+
+      <div id="gift-reveal" class="hidden">
+        <p style="color: var(--accent); font-weight: 800; margin-bottom: 14px;">✨ Surprise Unlocked! ✨</p>
+        <button class="btn-glow" onclick="goToScene(5)">Read Memory Letter 📸</button>
       </div>
     </div>
 
-    <!-- RECIPIENT SCENE 2: NAME & COUNTDOWN -->
-    <div id="scene-2" class="scene">
-      <div class="glass-box">
-        <p style="text-transform:uppercase; letter-spacing:2px; font-size:0.7rem; color:var(--accent);">Celebrating You</p>
-        <h1 class="hero-title" id="view-name">Happy Birthday!</h1>
-        <div id="view-age" style="font-weight:800; font-size:0.9rem; margin-bottom: 10px;"></div>
+    <!-- RECIPIENT SCENE 5: POLAROID GALLERY & LETTER -->
+    <div id="scene-5" class="scene-card">
+      <h1 class="title-cinematic">Memories & Wishes</h1>
 
-        <div class="timer-row">
-          <div class="timer-block"><div class="timer-val" id="t-d">00</div><div class="timer-lbl">Days</div></div>
-          <div class="timer-block"><div class="timer-val" id="t-h">00</div><div class="timer-lbl">Hours</div></div>
-          <div class="timer-block"><div class="timer-val" id="t-m">00</div><div class="timer-lbl">Mins</div></div>
-          <div class="timer-block"><div class="timer-val" id="t-s">00</div><div class="timer-lbl">Secs</div></div>
-        </div>
-
-        <button class="btn-action" onclick="transitionTo(3)" style="margin-top:10px;">Make a Wish 🎂</button>
-      </div>
-    </div>
-
-    <!-- RECIPIENT SCENE 3: CAKE -->
-    <div id="scene-3" class="scene">
-      <div class="glass-box">
-        <h2>Blow Out the Candle!</h2>
-        <p style="font-size: 0.8rem; color: var(--text-sub);">Tap the flame to extinguish the candle</p>
-        
-        <div class="cake-stage" onclick="blowFlame()">
-          <span class="flame-emoji" id="flame-icon">🔥</span>
-          <span class="cake-emoji">🎂</span>
-        </div>
-
-        <button id="next-to-gift" class="btn-action hidden" onclick="transitionTo(4)">Open Birthday Gift 🎁</button>
-      </div>
-    </div>
-
-    <!-- RECIPIENT SCENE 4: GIFT -->
-    <div id="scene-4" class="scene">
-      <div class="glass-box">
-        <h2>Tap Your Gift Box</h2>
-        <p style="font-size: 0.8rem; color: var(--text-sub);">Unwrap your special birthday present</p>
-        
-        <div class="gift-emoji" id="gift-box" onclick="openBox()">🎁</div>
-
-        <div id="gift-reveal" class="hidden">
-          <p style="color:var(--accent); font-weight:700;">✨ Gift Unlocked! ✨</p>
-          <button class="btn-action" onclick="transitionTo(5)" style="margin-top:15px;">Read Memory Letter 📸</button>
+      <div class="polaroid-card">
+        <img id="view-photo" src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=400&q=80">
+        <div class="carousel-controls">
+          <button class="carousel-btn" onclick="prevPhoto()">◀</button>
+          <span id="photo-counter" style="font-size:0.75rem; font-weight:700; color:#333;">1 / 1</span>
+          <button class="carousel-btn" onclick="nextPhoto()">▶</button>
         </div>
       </div>
-    </div>
 
-    <!-- RECIPIENT SCENE 5: MEMORIES & LETTER -->
-    <div id="scene-5" class="scene">
-      <div class="glass-box">
-        <h2>Memories & Letter</h2>
-        
-        <div class="polaroid-frame">
-          <img id="view-photo" src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=500&q=80">
-          <div class="gallery-nav">
-            <button class="nav-btn" onclick="prevPhoto()">◀ Prev</button>
-            <span id="photo-counter" style="font-size:0.75rem; font-weight:700;">1 / 1</span>
-            <button class="nav-btn" onclick="nextPhoto()">Next ▶</button>
-          </div>
-        </div>
+      <div class="typewriter-box" id="typewriter-output"></div>
 
-        <div style="font-family:'Dancing Script', cursive; font-size:1.5rem; margin:15px 0; color:var(--accent);" id="typewriter-output"></div>
-
-        <button class="btn-action" onclick="transitionTo(6)">Final Celebration ✨</button>
-      </div>
+      <button class="btn-glow" onclick="goToScene(6)">Grand Finale 🎉</button>
     </div>
 
     <!-- RECIPIENT SCENE 6: GRAND FINALE -->
-    <div id="scene-6" class="scene">
-      <div class="glass-box">
-        <h1 style="font-size:2.3rem; color:var(--accent);" id="finale-title">Happy Birthday!</h1>
-        <p style="margin: 15px 0; font-size: 0.9rem; line-height: 1.5;" id="finale-msg"></p>
-        <div style="font-size:3.5rem; animation: pulse 1.5s infinite alternate;">🎉🥳✨</div>
-      </div>
+    <div id="scene-6" class="scene-card">
+      <h1 class="title-cinematic" id="finale-title">Happy Birthday!</h1>
+      <p class="sub-text" id="finale-msg"></p>
+      <div style="font-size: 4rem; margin: 20px 0; animation: bounce 1.5s infinite alternate;">🥳🎉✨</div>
+      <button class="btn-glow" onclick="goToScene(1)">Replay Experience 🔄</button>
     </div>
 
   </div>
@@ -255,30 +388,37 @@
   <script>
     let uploadedPhotos = [];
     let galleryPhotos = [];
-    let photoIndex = 0;
-    let currentScene = 1;
-    let payload = null;
+    let photoIdx = 0;
+    let currentSceneIdx = 1;
+    let payloadData = null;
 
-    /* BACKGROUND ANIMATION ENGINE */
-    const canvas = document.getElementById('space-canvas');
+    /* 60FPS COSMIC CANVAS ENGINE */
+    const canvas = document.getElementById('fx-canvas');
     const ctx = canvas.getContext('2d');
-    let stars = [];
+    let particles = [];
+    let balloons = [];
 
-    function fitCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    window.addEventListener('resize', fitCanvas);
-    fitCanvas();
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-    class Star {
+    class Particle {
       constructor() {
+        this.reset();
+      }
+      reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         this.size = Math.random() * 2.5 + 0.5;
-        this.speedY = Math.random() * 0.5 + 0.1;
-        this.alpha = Math.random() * 0.7 + 0.3;
+        this.speedY = Math.random() * 0.4 + 0.1;
+        this.alpha = Math.random() * 0.8 + 0.2;
       }
       update() {
         this.y -= this.speedY;
-        if (this.y < 0) { this.y = canvas.height; this.x = Math.random() * canvas.width; }
+        if (this.y < 0) this.reset();
       }
       draw() {
         ctx.fillStyle = `rgba(255, 215, 0, ${this.alpha})`;
@@ -288,85 +428,88 @@
       }
     }
 
-    for (let i = 0; i < 45; i++) stars.push(new Star());
-    function renderLoop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      stars.forEach(s => { s.update(); s.draw(); });
-      requestAnimationFrame(renderLoop);
+    class Balloon {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + Math.random() * 100;
+        this.radius = Math.random() * 12 + 10;
+        this.speed = Math.random() * 0.8 + 0.3;
+        this.color = ['#ff2e93', '#8a2be2', '#ffd700', '#ff8a00'][Math.floor(Math.random() * 4)];
+      }
+      update() {
+        this.y -= this.speed;
+        if (this.y < -50) {
+          this.y = canvas.height + 50;
+          this.x = Math.random() * canvas.width;
+        }
+      }
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
-    renderLoop();
 
-    /* HIGH-PERFORMANCE IMAGE COMPRESSOR (KEEPS URL SMALL & COMPACT) */
-    function readPhotos(e) {
+    for (let i = 0; i < 40; i++) particles.push(new Particle());
+    for (let i = 0; i < 12; i++) balloons.push(new Balloon());
+
+    function animLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      balloons.forEach(b => { b.update(); b.draw(); });
+      requestAnimationFrame(animLoop);
+    }
+    animLoop();
+
+    /* ULTRA IMAGE COMPRESSION (KEPT ULTRA-SMALL FOR SHORT URLS) */
+    function processPhotos(e) {
       const files = Array.from(e.target.files).slice(0, 5);
       uploadedPhotos = [];
-      document.getElementById('photo-count-label').innerText = `Processing (${files.length} photos)...`;
+      document.getElementById('photo-label').innerText = `Optimizing (${files.length} photos)...`;
       
-      let processed = 0;
+      let done = 0;
       files.forEach(file => {
-        const img = new Image();
         const reader = new FileReader();
-        
-        reader.onload = (evt) => { img.src = evt.target.result; };
-        img.onload = () => {
-          const cvs = document.createElement('canvas');
-          const cCtx = cvs.getContext('2d');
-          
-          const maxDim = 260; 
-          let w = img.width;
-          let h = img.height;
-          if (w > h) {
-            if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
-          } else {
-            if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
-          }
-          
-          cvs.width = w;
-          cvs.height = h;
-          cCtx.drawImage(img, 0, 0, w, h);
-          
-          const compressedDataUrl = cvs.toDataURL('image/jpeg', 0.45);
-          uploadedPhotos.push(compressedDataUrl);
-          
-          processed++;
-          if (processed === files.length) {
-            document.getElementById('photo-count-label').innerText = `Upload Photos (${files.length} ready / max 5)`;
-          }
+        reader.onload = (evt) => {
+          const img = new Image();
+          img.onload = () => {
+            const cvs = document.createElement('canvas');
+            const cctx = cvs.getContext('2d');
+            
+            // Ultra downsample dimension max 180px
+            const maxDim = 180;
+            let w = img.width, h = img.height;
+            if (w > h) {
+              if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+            } else {
+              if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
+            }
+            
+            cvs.width = w; cvs.height = h;
+            cctx.drawImage(img, 0, 0, w, h);
+            
+            // High compression JPEG string
+            const compressed = cvs.toDataURL('image/jpeg', 0.35);
+            uploadedPhotos.push(compressed);
+            
+            done++;
+            if (done === files.length) {
+              document.getElementById('photo-label').innerText = `Upload Photos (${files.length} ready)`;
+            }
+          };
+          img.src = evt.target.result;
         };
         reader.readAsDataURL(file);
       });
     }
 
-    /* PHOTO GALLERY CAROUSEL LOGIC */
-    function updatePhotoDisplay() {
-      if(!galleryPhotos || galleryPhotos.length === 0) return;
-      const img = document.getElementById('view-photo');
-      img.style.opacity = '0';
-      setTimeout(() => {
-        img.src = galleryPhotos[photoIndex];
-        img.style.opacity = '1';
-        document.getElementById('photo-counter').innerText = `${photoIndex + 1} / ${galleryPhotos.length}`;
-      }, 150);
-    }
-
-    function nextPhoto() {
-      if(!galleryPhotos.length) return;
-      photoIndex = (photoIndex + 1) % galleryPhotos.length;
-      updatePhotoDisplay();
-    }
-
-    function prevPhoto() {
-      if(!galleryPhotos.length) return;
-      photoIndex = (photoIndex - 1 + galleryPhotos.length) % galleryPhotos.length;
-      updatePhotoDisplay();
-    }
-
-    /* URL GENERATION LOGIC */
+    /* GENERATE COMPACT URL */
     function generateLink() {
       const name = document.getElementById('in-name').value.trim();
-      if (!name) return alert("Please enter recipient name!");
+      if (!name) return alert("Please enter a recipient name!");
 
-      const dataObj = {
+      const payload = {
         n: name,
         a: document.getElementById('in-age').value,
         d: document.getElementById('in-date').value,
@@ -374,118 +517,162 @@
         p: uploadedPhotos
       };
 
-      const baseDomain = "https://special-birthday-celebration-site.vercel.app/";
-      const encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(dataObj)))));
+      const baseDomain = window.location.origin + window.location.pathname;
+      const encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(payload)))));
       const fullUrl = `${baseDomain}?data=${encoded}`;
 
-      document.getElementById('share-url').innerText = fullUrl;
-      document.getElementById('share-output').classList.remove('hidden');
+      document.getElementById('share-url-text').innerText = fullUrl;
+      document.getElementById('share-box').classList.remove('hidden');
       document.getElementById('qrcode').innerHTML = "";
       new QRCode(document.getElementById('qrcode'), { text: fullUrl, width: 120, height: 120 });
     }
 
     function copyLink() {
-      navigator.clipboard.writeText(document.getElementById('share-url').innerText);
-      alert("Surprise link copied!");
+      navigator.clipboard.writeText(document.getElementById('share-url-text').innerText);
+      alert("Surprise link copied to clipboard!");
     }
 
-    /* CINEMATIC TRANSITION PIPELINE */
-    function transitionTo(targetScene) {
-      const activeEl = document.getElementById(`scene-${currentScene}`);
-      const nextEl = document.getElementById(`scene-${targetScene}`);
+    /* SCENE ROUTER & CINEMATIC GSAP TRANSITIONS */
+    function goToScene(targetIdx) {
+      const currentEl = document.getElementById(`scene-${currentSceneIdx}`) || document.getElementById('scene-creator');
+      const targetEl = document.getElementById(`scene-${targetIdx}`);
 
-      gsap.to(activeEl, { duration: 0.35, opacity: 0, scale: 0.9, onComplete: () => {
-        activeEl.classList.remove('active');
-        nextEl.classList.add('active');
-        gsap.fromTo(nextEl, { opacity: 0, scale: 1.05 }, { duration: 0.45, opacity: 1, scale: 1 });
-        currentScene = targetScene;
-        triggerSceneEvents(targetScene);
-      }});
+      gsap.to(currentEl, {
+        duration: 0.4,
+        opacity: 0,
+        scale: 0.85,
+        y: -20,
+        onComplete: () => {
+          currentEl.classList.remove('active');
+          targetEl.classList.add('active');
+          gsap.fromTo(targetEl, 
+            { opacity: 0, scale: 1.1, y: 30 }, 
+            { duration: 0.5, opacity: 1, scale: 1, y: 0, ease: "back.out(1.2)" }
+          );
+          currentSceneIdx = targetIdx;
+          onSceneEnter(targetIdx);
+        }
+      });
     }
 
-    function triggerSceneEvents(stageIndex) {
-      if (stageIndex === 2) {
-        confetti({ particleCount: 70, spread: 65, origin: { y: 0.7 } });
+    function onSceneEnter(idx) {
+      if (idx === 2) {
+        confetti({ particleCount: 60, spread: 60, origin: { y: 0.7 } });
       }
-      if (stageIndex === 5) {
-        let text = payload?.m || "Wishing you a magical day filled with infinite joy, laughter, and light!";
-        let index = 0;
+      if (idx === 5) {
+        let msg = payloadData?.m || "Wishing you a beautiful day filled with everlasting joy, smiles, and laughter!";
+        let charIdx = 0;
         document.getElementById('typewriter-output').innerText = "";
-        function runTypewriter() {
-          if (index < text.length) {
-            document.getElementById('typewriter-output').innerText += text.charAt(index);
-            index++; setTimeout(runTypewriter, 38);
+        function typeNext() {
+          if (charIdx < msg.length) {
+            document.getElementById('typewriter-output').innerText += msg.charAt(charIdx);
+            charIdx++;
+            setTimeout(typeNext, 40);
           }
         }
-        runTypewriter();
-        setInterval(() => nextPhoto(), 3500);
+        typeNext();
       }
-      if (stageIndex === 6) {
-        setInterval(() => {
-          confetti({ particleCount: 40, spread: 80, origin: { y: 0.5 } });
-        }, 2500);
+      if (idx === 6) {
+        let count = 0;
+        let interval = setInterval(() => {
+          confetti({ particleCount: 50, spread: 80, origin: { y: 0.6 } });
+          count++;
+          if(count > 4) clearInterval(interval);
+        }, 1200);
       }
     }
 
-    /* INTERACTION: CANDLE */
+    /* INTERACTION LOGIC */
     function blowFlame() {
-      gsap.to('#flame-icon', { duration: 0.3, scale: 0, opacity: 0 });
-      confetti({ particleCount: 100, spread: 70 });
-      document.getElementById('next-to-gift').classList.remove('hidden');
+      gsap.to('#flame-el', { duration: 0.3, scale: 0, opacity: 0 });
+      confetti({ particleCount: 90, spread: 70 });
+      document.getElementById('btn-to-gift').classList.remove('hidden');
     }
 
-    /* INTERACTION: GIFT */
-    function openBox() {
-      gsap.to('#gift-box', { duration: 0.1, x: "+=10", yoyo: true, repeat: 5, onComplete: () => {
-        document.getElementById('gift-box').innerText = "📦";
-        confetti({ particleCount: 120, spread: 90 });
-        document.getElementById('gift-reveal').classList.remove('hidden');
-      }});
+    function openGift() {
+      gsap.to('#gift-el', { 
+        duration: 0.1, 
+        x: "+=12", 
+        yoyo: true, 
+        repeat: 7, 
+        onComplete: () => {
+          document.getElementById('gift-el').innerText = "📦";
+          confetti({ particleCount: 120, spread: 100 });
+          document.getElementById('gift-reveal').classList.remove('hidden');
+        }
+      });
     }
 
-    /* COUNTDOWN ENGINE */
-    function setupTimer(dateStr) {
-      if(!dateStr) return;
-      const targetTime = new Date(dateStr).getTime();
+    /* GALLERY CAROUSEL */
+    function updatePhotoDisplay() {
+      if (!galleryPhotos.length) return;
+      const img = document.getElementById('view-photo');
+      img.style.opacity = '0';
+      setTimeout(() => {
+        img.src = galleryPhotos[photoIdx];
+        img.style.opacity = '1';
+        document.getElementById('photo-counter').innerText = `${photoIdx + 1} / ${galleryPhotos.length}`;
+      }, 150);
+    }
+
+    function nextPhoto() {
+      if (!galleryPhotos.length) return;
+      photoIdx = (photoIdx + 1) % galleryPhotos.length;
+      updatePhotoDisplay();
+    }
+
+    function prevPhoto() {
+      if (!galleryPhotos.length) return;
+      photoIdx = (photoIdx - 1 + galleryPhotos.length) % galleryPhotos.length;
+      updatePhotoDisplay();
+    }
+
+    /* COUNTDOWN TIMER */
+    function startCountdown(targetStr) {
+      if(!targetStr) return;
+      const targetTime = new Date(targetStr).getTime();
       setInterval(() => {
-        const delta = targetTime - new Date().getTime();
-        if(delta <= 0) return;
-        document.getElementById('t-d').innerText = Math.floor(delta / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-        document.getElementById('t-h').innerText = Math.floor((delta % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-        document.getElementById('t-m').innerText = Math.floor((delta % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-        document.getElementById('t-s').innerText = Math.floor((delta % (1000 * 60)) / 1000).toString().padStart(2, '0');
+        const now = new Date().getTime();
+        const diff = targetTime - now;
+        if (diff <= 0) return;
+
+        document.getElementById('t-d').innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+        document.getElementById('t-h').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+        document.getElementById('t-m').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+        document.getElementById('t-s').innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
       }, 1000);
     }
 
-    /* INITIALIZATION & ROUTING */
+    /* INITIALIZATION */
     window.onload = function() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const encodedData = urlParams.get('data');
+      const params = new URLSearchParams(window.location.search);
+      const dataParam = params.get('data');
 
-      if (encodedData) {
+      if (dataParam) {
         try {
-          payload = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(encodedData)))));
+          payloadData = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(dataParam)))));
           
           document.getElementById('scene-creator').classList.remove('active');
           document.getElementById('scene-1').classList.add('active');
 
-          document.getElementById('view-name').innerText = `Happy Birthday, ${payload.n}!`;
-          if (payload.a) document.getElementById('view-age').innerText = `Turning ${payload.a} Years Young ✨`;
-          document.getElementById('finale-title').innerText = `Happy Birthday, ${payload.n}! 🎉`;
-          document.getElementById('finale-msg').innerText = payload.m || "May your birthday be as amazing as you are!";
+          document.getElementById('view-name').innerText = `Happy Birthday, ${payloadData.n}!`;
+          if (payloadData.a) document.getElementById('view-age').innerText = `Turning ${payloadData.a} Years Young ✨`;
+          document.getElementById('finale-title').innerText = `Happy Birthday, ${payloadData.n}! 🎉`;
+          document.getElementById('finale-msg').innerText = payloadData.m || "May your special day be filled with infinite magic!";
 
-          if(payload.p && payload.p.length > 0) {
-            galleryPhotos = payload.p;
+          if (payloadData.p && payloadData.p.length > 0) {
+            galleryPhotos = payloadData.p;
           } else {
             galleryPhotos = [
-              "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=500&q=80",
-              "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=500&q=80"
+              "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=400&q=80",
+              "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=400&q=80"
             ];
           }
           updatePhotoDisplay();
-          setupTimer(payload.d);
-        } catch(err) {
-          console.error("Corrupted URL data.", err);
+          startCountdown(payloadData.d);
+
+        } catch(e) {
+          console.error("Payload decoding error:", e);
         }
       }
     };
