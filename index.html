@@ -12,7 +12,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
-    /* THEME SYSTEM CONFIGURATIONS */
     :root[data-theme="dark"] {
       --primary: #ff2e93; --secondary: #8a2be2; --accent: #ffd700;
       --bg: #080314; --card-bg: rgba(255, 255, 255, 0.06);
@@ -54,7 +53,6 @@
 
     #fx-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
 
-    /* LAYOUT CONTAINERS */
     .app-viewport { width: 100vw; height: 100vh; position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; padding: 12px; }
     
     .screen {
@@ -70,12 +68,10 @@
     .screen-content::-webkit-scrollbar { width: 4px; }
     .screen-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-    /* TYPOGRAPHY */
     h1, h2 { font-family: 'Fredoka', cursive; font-weight: 700; }
     .title-main { font-size: 1.8rem; line-height: 1.2; background: linear-gradient(135deg, var(--text) 30%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
     .subtitle { color: var(--subtext); font-size: 0.85rem; line-height: 1.4; margin-bottom: 16px; }
 
-    /* FORM COMPONENTS */
     .form-group { margin-bottom: 12px; text-align: left; }
     .form-group label { display: block; font-size: 0.7rem; font-weight: 700; color: var(--subtext); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
     input, textarea, select { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.25); color: var(--text); font-size: 0.9rem; outline: none; transition: 0.3s; }
@@ -86,27 +82,22 @@
     .w-step { flex: 1; height: 4px; background: var(--border); border-radius: 2px; transition: 0.3s; }
     .w-step.active { background: var(--primary); }
 
-    /* BUTTONS & CONTROLS */
     .btn-main { width: 100%; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: #fff; border: none; padding: 14px; border-radius: 50px; font-size: 0.95rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s; margin-top: 10px; }
     .btn-main:active { transform: scale(0.96); }
     .btn-row { display: flex; gap: 8px; margin-top: 10px; }
 
-    /* THEME SELECTOR GRID */
     .theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
     .theme-opt { padding: 10px 6px; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); text-align: center; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
     .theme-opt.selected { border-color: var(--primary); background: var(--card-bg); box-shadow: 0 0 10px var(--primary); }
 
-    /* PHOTO MANAGEMENT */
     .photo-upload-zone { border: 2px dashed var(--border); border-radius: 14px; padding: 16px; text-align: center; cursor: pointer; background: rgba(0,0,0,0.1); margin-bottom: 10px; }
     .photo-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 160px; overflow-y: auto; margin-bottom: 10px; }
     .photo-thumb { position: relative; height: 75px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
     .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
     .photo-thumb button { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.7); color: #fff; border: none; width: 20px; height: 20px; border-radius: 50%; font-size: 10px; cursor: pointer; }
 
-    /* MUSIC BAR */
     .music-widget { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 12px; font-size: 0.8rem; }
 
-    /* RECIPIENT CINEMATIC SEQUENCER */
     .cinematic-box { text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100%; }
     
     .cake-stage { position: relative; width: 130px; height: 130px; margin: 20px auto; cursor: pointer; }
@@ -116,22 +107,18 @@
 
     .gift-box-el { font-size: 5.5rem; margin: 20px 0; cursor: pointer; display: inline-block; transition: transform 0.2s; }
 
-    /* POLAROID CAROUSEL */
     .polaroid-card { background: #fff; color: #222; padding: 10px 10px 22px 10px; border-radius: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); transform: rotate(-1.5deg); margin: 10px auto; max-width: 250px; }
     .polaroid-card img { width: 100%; height: 190px; object-fit: cover; border-radius: 4px; transition: opacity 0.3s; }
     .gallery-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
     .g-btn { background: rgba(0,0,0,0.1); border: none; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 0.75rem; cursor: pointer; color: #333; }
 
-    /* COUNTDOWN */
     .timer-row { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
     .t-box { background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 8px; border-radius: 12px; min-width: 58px; }
     .t-val { font-size: 1.2rem; font-weight: 800; color: var(--accent); }
     .t-lbl { font-size: 0.55rem; text-transform: uppercase; color: var(--subtext); }
 
-    /* TYPEWRITER LETTER */
     .letter-paper { font-family: 'Dancing Script', cursive; font-size: 1.35rem; color: var(--accent); min-height: 90px; max-height: 140px; overflow-y: auto; line-height: 1.4; margin: 12px 0; padding: 10px; background: rgba(0,0,0,0.15); border-radius: 10px; border: 1px solid var(--border); }
 
-    /* UTILS & MODALS */
     .loader-overlay { position: fixed; inset: 0; background: rgba(5,3,10,0.85); z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -144,7 +131,6 @@
 
   <canvas id="fx-canvas"></canvas>
 
-  <!-- GLOBAL LOADER -->
   <div id="app-loader" class="loader-overlay hidden">
     <div class="spinner"></div>
     <p id="loader-msg" style="font-weight: 600; color: var(--accent); font-size: 0.9rem;">Processing Data...</p>
@@ -152,9 +138,7 @@
 
   <div class="app-viewport">
 
-    <!-- ============================================== -->
-    <!-- CREATOR PANEL (MULTI-STEP WIZARD)             -->
-    <!-- ============================================== -->
+    <!-- CREATOR STUDIO WIZARD -->
     <div id="screen-creator" class="screen active">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
         <h1 style="font-size: 1.4rem;">🎁 Surprise Studio</h1>
@@ -169,7 +153,6 @@
       </div>
 
       <div class="screen-content">
-        <!-- STEP 1: DETAILS -->
         <div class="w-panel" id="panel-1">
           <h2 class="title-main" style="font-size: 1.3rem;">Birthday Profile</h2>
           <p class="subtitle">Who is this cinematic surprise dedicated to?</p>
@@ -184,7 +167,6 @@
           <button class="btn-main" onclick="setWizardStep(2)">Next: Photos 📸</button>
         </div>
 
-        <!-- STEP 2: PHOTOS -->
         <div class="w-panel hidden" id="panel-2">
           <h2 class="title-main" style="font-size: 1.3rem;">Memory Gallery</h2>
           <p class="subtitle">Upload photos for the cinematic polaroid reel.</p>
@@ -203,7 +185,6 @@
           </div>
         </div>
 
-        <!-- STEP 3: THEMES & MUSIC -->
         <div class="w-panel hidden" id="panel-3">
           <h2 class="title-main" style="font-size: 1.3rem;">Theme & Vibe</h2>
           <p class="subtitle">Select your aesthetic style and atmospheric music.</p>
@@ -239,7 +220,6 @@
           </div>
         </div>
 
-        <!-- STEP 4: PUBLISHED SUCCESS & LINK -->
         <div class="w-panel hidden" id="panel-4">
           <div style="text-align:center; padding: 10px 0;">
             <div style="font-size: 3.5rem; margin-bottom: 8px;">🎉</div>
@@ -260,12 +240,7 @@
       </div>
     </div>
 
-
-    <!-- ============================================== -->
-    <!-- RECIPIENT CINEMATIC EXPERIENCE SCREENS        -->
-    <!-- ============================================== -->
-    
-    <!-- RECIPIENT SCENE 0: OPENING INTRO -->
+    <!-- RECIPIENT SCREENS -->
     <div id="scene-0" class="screen">
       <div class="cinematic-box">
         <div style="font-size: 5rem; margin-bottom: 12px; filter: drop-shadow(0 0 25px var(--primary));">💌</div>
@@ -276,7 +251,6 @@
       </div>
     </div>
 
-    <!-- RECIPIENT SCENE 1: HERO & COUNTDOWN -->
     <div id="scene-1" class="screen">
       <div class="cinematic-box">
         <span class="badge-tag">Celebrating You</span>
@@ -294,7 +268,6 @@
       </div>
     </div>
 
-    <!-- RECIPIENT SCENE 2: INTERACTIVE CAKE -->
     <div id="scene-2" class="screen">
       <div class="cinematic-box">
         <h2 class="title-main" style="font-size: 1.8rem;">Blow Out Candles</h2>
@@ -310,7 +283,6 @@
       </div>
     </div>
 
-    <!-- RECIPIENT SCENE 3: GIFT BOX UNBOXING -->
     <div id="scene-3" class="screen">
       <div class="cinematic-box">
         <h2 class="title-main" style="font-size: 1.8rem;">Surprise Gift Box</h2>
@@ -325,7 +297,6 @@
       </div>
     </div>
 
-    <!-- RECIPIENT SCENE 4: LETTER & MEMORIES -->
     <div id="scene-4" class="screen">
       <div class="cinematic-box" style="justify-content: flex-start; padding-top: 10px;">
         <h2 class="title-main" style="font-size: 1.5rem; margin-bottom: 4px;">Memories & Wishes</h2>
@@ -345,7 +316,6 @@
       </div>
     </div>
 
-    <!-- RECIPIENT SCENE 5: GRAND CELEBRATION FINALE -->
     <div id="scene-5" class="screen">
       <div class="cinematic-box">
         <h1 class="title-main" id="rec-finale-title" style="font-size: 2.2rem;">Happy Birthday!</h1>
@@ -358,9 +328,7 @@
   </div>
 
   <script>
-    // Database storage endpoint (ExtendsClass public persistent JSON bin store)
     const DB_ENDPOINT = "https://json.extendsclass.com/bin";
-    const IMG_BB_KEY = "6d201075ebb1ca238a4176751272782e";
 
     let creatorState = {
       name: "", nickname: "", age: "", date: "", sender: "", msg: "",
@@ -374,9 +342,7 @@
     let previewModeActive = false;
     let audioContextPlayer = null;
 
-    /* ============================================== */
-    /* 60FPS BACKGROUND PARTICLE & BALLOON ENGINE     */
-    /* ============================================== */
+    /* 60FPS BACKGROUND ANIMATION ENGINE */
     const canvas = document.getElementById('fx-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -442,9 +408,7 @@
     }
     renderLoop();
 
-    /* ============================================== */
-    /* CREATOR STUDIO WIZARD CONTROLS                */
-    /* ============================================== */
+    /* CREATOR STUDIO WIZARD */
     function setWizardStep(step) {
       if (step === 2) {
         const name = document.getElementById('c-name').value.trim();
@@ -524,7 +488,6 @@
       renderPhotoPreviews();
     }
 
-    /* MUSIC PREVIEW MANAGEMENT */
     function previewCreatorMusic() {
       const trackUrl = document.getElementById('c-music').value;
       creatorState.music = trackUrl;
@@ -542,7 +505,7 @@
         audioContextPlayer.play().then(() => {
           document.getElementById('music-status-txt').innerText = "Audio: Playing 🎵";
           document.getElementById('music-toggle-btn').innerText = "Pause ⏸";
-        }).catch(err => {
+        }).catch(() => {
           alert("Browser blocked autoplay. Tap play again.");
         });
       } else {
@@ -558,9 +521,7 @@
       }
     }
 
-    /* ============================================== */
-    /* PUBLISHING & CLOUD DATABASE SYNC               */
-    /* ============================================== */
+    /* PUBLISHING WITH BACKUP LOCAL CACHE */
     async function publishBirthdayPage() {
       showLoader("Publishing Surprise to Cloud Database...");
 
@@ -582,7 +543,10 @@
           body: JSON.stringify(creatorState)
         });
         const result = await response.json();
-        const uniqueId = result.id; // Clean short identifier e.g. "a7K9x2"
+        const uniqueId = result.id; 
+
+        // Cache state locally so it can always be retrieved securely even if network blocks
+        localStorage.setItem(`bday_${uniqueId}`, JSON.stringify(creatorState));
 
         hideLoader();
 
@@ -619,11 +583,9 @@
       document.getElementById('c-sender').value = "";
       document.getElementById('c-msg').value = "";
       setWizardStep(1);
+      window.location.hash = "";
     }
 
-    /* ============================================== */
-    /* LIVE PREVIEW TOGGLE                            */
-    /* ============================================== */
     function toggleLivePreviewMode() {
       const name = document.getElementById('c-name').value.trim() || "Aarav Sharma";
       const sender = document.getElementById('c-sender').value.trim() || "Priya";
@@ -648,40 +610,34 @@
     function exitToCreatorStudio() {
       if (audioContextPlayer) { audioContextPlayer.pause(); audioContextPlayer = null; }
       previewModeActive = false;
+      window.location.hash = "";
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById('screen-creator').classList.add('active');
     }
 
-    /* ============================================== */
-    /* RECIPIENT EXPERIENCE ENGINE                    */
-    /* ============================================== */
     let loadedRecipientData = null;
 
     async function loadRecipientExperience(data) {
       loadedRecipientData = data;
       document.documentElement.setAttribute('data-theme', data.theme || 'dark');
 
-      // Populate text nodes
       document.getElementById('rec-sender-tag').innerText = `Prepared by ${data.sender}`;
       document.getElementById('rec-title-name').innerText = `Happy Birthday, ${data.name}!`;
       document.getElementById('rec-age-subtitle').innerText = data.age ? `Turning ${data.age} Years Young ✨` : "";
       document.getElementById('rec-finale-title').innerText = `Happy Birthday, ${data.name}! 🎉`;
       document.getElementById('rec-finale-sub').innerText = data.msg;
 
-      // Initialize photos & countdown
       activePhotosList = data.photos || [];
       polaroidIndex = 0;
       updatePolaroidPhoto();
       startCountdownTimer(data.date);
 
-      // Play background audio if selected
       if (data.music && data.music !== 'none' && !audioContextPlayer) {
         audioContextPlayer = new Audio(data.music);
         audioContextPlayer.loop = true;
         audioContextPlayer.play().catch(() => {});
       }
 
-      // Switch to Scene 0 (Intro)
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById('scene-0').classList.add('active');
     }
@@ -707,7 +663,6 @@
         confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
       }
       if (sceneIdx === 4) {
-        // Typewriter Effect
         let msg = loadedRecipientData?.msg || "Wishing you a magical day filled with infinite joy and light!";
         let charIdx = 0;
         document.getElementById('rec-typewriter-text').innerText = "";
@@ -730,7 +685,6 @@
       }
     }
 
-    /* RECIPIENT INTERACTIONS */
     function triggerCakeWish() {
       gsap.to('#cake-flame', { duration: 0.3, scale: 0, opacity: 0 });
       confetti({ particleCount: 100, spread: 80 });
@@ -785,7 +739,6 @@
       }, 1000);
     }
 
-    /* GLOBAL HELPERS */
     function showLoader(text) {
       document.getElementById('loader-msg').innerText = text;
       document.getElementById('app-loader').classList.remove('hidden');
@@ -794,29 +747,45 @@
       document.getElementById('app-loader').classList.add('hidden');
     }
 
-    /* ============================================== */
-    /* ROUTING & INITIALIZATION ON PAGE LOAD         */
-    /* ============================================== */
+    /* BULLETPROOF ROUTING & ERROR RECOVERY */
     window.onload = async function() {
-      const hash = window.location.hash; // e.g. #/a7K9x2
+      const hash = window.location.hash.trim(); // e.g. #/a7K9x2 or #/undefined
+      
       if (hash && hash.includes('/')) {
         const uniqueId = hash.split('/')[1];
-        if (uniqueId) {
-          showLoader("Loading Cinematic Surprise...");
-          try {
+        
+        // Handle malformed or undefined parameters explicitly
+        if (!uniqueId || uniqueId === 'undefined' || uniqueId === 'null') {
+          window.location.hash = "";
+          return;
+        }
+
+        showLoader("Loading Cinematic Surprise...");
+        try {
+          let data = null;
+          
+          // First check local backup store to instantly load if available
+          const localBackup = localStorage.getItem(`bday_${uniqueId}`);
+          if (localBackup) {
+            data = JSON.parse(localBackup);
+          } else {
+            // Otherwise, fetch from cloud database API endpoint
             const res = await fetch(`${DB_ENDPOINT}/${uniqueId}`);
-            if (!res.ok) throw new Error("Link expired or not found");
-            const data = await res.json();
-            hideLoader();
-            if (data && data.name) {
-              loadRecipientExperience(data);
-              return;
-            }
-          } catch (err) {
-            hideLoader();
-            alert("This birthday link is invalid, expired, or could not be found. Redirecting to creator studio.");
-            window.location.hash = "";
+            if (!res.ok) throw new Error("Link not found");
+            data = await res.json();
           }
+
+          hideLoader();
+          if (data && data.name) {
+            loadRecipientExperience(data);
+            return;
+          } else {
+            throw new Error("Invalid record format");
+          }
+        } catch (err) {
+          hideLoader();
+          alert("This birthday link is invalid, expired, or was removed. Redirecting to the Creator Studio.");
+          window.location.hash = "";
         }
       }
     };
