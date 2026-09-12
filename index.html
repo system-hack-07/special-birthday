@@ -54,12 +54,12 @@
     .screen-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
     h1, h2 { font-family: 'Fredoka', cursive; font-weight: 700; }
-    .title-main { font-size: 1.8rem; line-height: 1.2; background: linear-gradient(135deg, var(--text) 30%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+    .title-main { font-size: 1.8rem; line-height: 1.2; background: linear-gradient(135deg, var(--text) 30%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; m[...]
     .subtitle { color: var(--subtext); font-size: 0.85rem; line-height: 1.4; margin-bottom: 16px; }
 
     .form-group { margin-bottom: 12px; text-align: left; }
     .form-group label { display: block; font-size: 0.7rem; font-weight: 700; color: var(--subtext); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-    input, textarea, select { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.25); color: var(--text); font-size: 0.9rem; outline: none; transition: 0.3s; }
+    input, textarea, select { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.25); color: var(--text); font-size: 0.9rem; outline: none;[...]
     input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 12px var(--primary); }
     select option { background: #111; color: #fff; }
 
@@ -67,7 +67,7 @@
     .w-step { flex: 1; height: 4px; background: var(--border); border-radius: 2px; transition: 0.3s; }
     .w-step.active { background: var(--primary); }
 
-    .btn-main { width: 100%; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: #fff; border: none; padding: 14px; border-radius: 50px; font-size: 0.95rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s; margin-top: 10px; }
+    .btn-main { width: 100%; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: #fff; border: none; padding: 14px; border-radius: 50px; font-size: 0.95rem; font-weig[...]
     .btn-main:active { transform: scale(0.96); }
     .btn-row { display: flex; gap: 8px; margin-top: 10px; }
 
@@ -79,7 +79,7 @@
     .photo-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 160px; overflow-y: auto; margin-bottom: 10px; }
     .photo-thumb { position: relative; height: 75px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
     .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
-    .photo-thumb button { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.7); color: #fff; border: none; width: 20px; height: 20px; border-radius: 50%; font-size: 10px; cursor: pointer; }
+    .photo-thumb button { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.7); color: #fff; border: none; width: 20px; height: 20px; border-radius: 50%; font-size: 10px; cursor: poin[...]
 
     .cinematic-box { text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100%; }
     
@@ -90,12 +90,12 @@
 
     .gift-box-el { font-size: 5.5rem; margin: 20px 0; cursor: pointer; display: inline-block; transition: transform 0.2s; }
 
-    .polaroid-card { background: #fff; color: #222; padding: 10px 10px 22px 10px; border-radius: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); transform: rotate(-1.5deg); margin: 10px auto; max-width: 250px; }
+    .polaroid-card { background: #fff; color: #222; padding: 10px 10px 22px 10px; border-radius: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); transform: rotate(-1.5deg); margin: 10px auto; max-width[...]
     .polaroid-card img { width: 100%; height: 190px; object-fit: cover; border-radius: 4px; transition: opacity 0.3s; }
     .gallery-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
     .g-btn { background: rgba(0,0,0,0.1); border: none; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 0.75rem; cursor: pointer; color: #333; }
 
-    .letter-paper { font-family: 'Dancing Script', cursive; font-size: 1.35rem; color: var(--accent); min-height: 90px; max-height: 140px; overflow-y: auto; line-height: 1.4; margin: 12px 0; padding: 10px; background: rgba(0,0,0,0.15); border-radius: 10px; border: 1px solid var(--border); }
+    .letter-paper { font-family: 'Dancing Script', cursive; font-size: 1.35rem; color: var(--accent); min-height: 90px; max-height: 140px; overflow-y: auto; line-height: 1.4; margin: 12px 0; padding: [...]
 
     .loader-overlay { position: fixed; inset: 0; background: rgba(5,3,10,0.85); z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
     .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
@@ -339,11 +339,53 @@
       cont.innerHTML = photosList.map((src, i) => `<div class="photo-thumb"><img src="${src}"><button onclick="photosList.splice(${i},1);renderPreviews()">✕</button></div>`).join('');
     }
 
-    // Generate unique slug/ID from name + random suffix (e.g. samarth-a82k9)
+    // ✅ FIXED: Robust slug generation with fallback and validation
     function generateSlug(name) {
-      const cleanName = (name || "birthday").toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').slice(0, 15);
-      const randSuffix = Math.random().toString(36).substring(2, 7);
-      return `${cleanName}-${randSuffix}`;
+      if (!name || typeof name !== 'string') {
+        console.error("Invalid name input for slug generation:", name);
+        return null;
+      }
+
+      const trimmedName = name.trim();
+      if (!trimmedName) {
+        console.error("Name is empty after trimming");
+        return null;
+      }
+
+      // Clean: lowercase, remove non-alphanumeric, collapse multiple dashes
+      let cleanName = trimmedName
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, '') // Remove special chars, keep spaces
+        .replace(/\s+/g, '-')         // Replace spaces with dash
+        .replace(/-+/g, '-')          // Collapse multiple dashes
+        .replace(/^-+|-+$/g, '')      // Remove leading/trailing dashes
+        .slice(0, 20);                // Limit length
+
+      // Fallback if cleaning resulted in empty string
+      if (!cleanName) {
+        cleanName = 'birthday';
+      }
+
+      // Generate random suffix (7 chars for uniqueness)
+      const randSuffix = Math.random().toString(36).substring(2, 9);
+      
+      const slug = `${cleanName}-${randSuffix}`;
+
+      // Final validation before returning
+      if (!slug || slug === "-" || slug.startsWith('-') || slug.endsWith('-')) {
+        console.error("Slug validation failed:", slug);
+        return null;
+      }
+
+      return slug;
+    }
+
+    // ✅ FIXED: Strict validation before link generation
+    function isValidBirthdayId(id) {
+      if (!id || typeof id !== 'string') return false;
+      if (id === 'undefined' || id === 'null' || id === '[object Object]' || id === '') return false;
+      if (id.startsWith('-') || id.endsWith('-')) return false;
+      return /^[a-z0-9\-]+$/.test(id);
     }
 
     async function publishBirthdayPage() {
@@ -361,18 +403,17 @@
       state.msg = document.getElementById('c-msg').value.trim() || "Wishing you a wonderful day!";
       state.photos = photosList.length ? photosList : ["https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80"];
 
-      // 1. Generate unique ID/slug from name
+      // ✅ FIXED: Generate and validate slug BEFORE proceeding
       const birthdayId = generateSlug(state.name);
 
-      // CRITICAL VALIDATION CHECK BEFORE PROCEEDING
-      if (!birthdayId || birthdayId === "undefined" || birthdayId === "null" || birthdayId === "[object Object]") {
+      if (!isValidBirthdayId(birthdayId)) {
         hideLoader();
-        console.error("Link generation failed due to invalid ID structure:", birthdayId);
-        alert("Unable to create your birthday link. Please try again.");
+        console.error("Link generation failed - invalid slug produced:", birthdayId);
+        alert("Unable to create your birthday link. Please try again with a valid name.");
         return;
       }
 
-      // Attach ID explicitly to data payload model
+      // ✅ FIXED: Attach ID to state object
       state.id = birthdayId;
 
       try {
@@ -388,9 +429,11 @@
         // Save backup copy to local storage using the exact same ID key
         localStorage.setItem(`bday_${birthdayId}`, JSON.stringify(state));
 
-        // Construct exact valid URL using '#/birthday/<id>' format pattern
+        // ✅ FIXED: Construct final URL with validated ID
         const cleanBaseUrl = window.location.origin + window.location.pathname;
         const finalUrl = `${cleanBaseUrl}#/birthday/${birthdayId}`;
+
+        console.log("Birthday link created successfully:", finalUrl);
 
         hideLoader();
         document.getElementById('final-share-url').innerText = finalUrl;
@@ -493,23 +536,27 @@
       document.getElementById('scene-error').classList.add('active');
     }
 
-    // STRICT ROUTER ROUTINE & URL HASH PARSER
+    // ✅ FIXED: Strict router routine with comprehensive validation
     async function handleRouting() {
       const hash = window.location.hash.trim();
       
       if (hash.startsWith('#/birthday/')) {
         const birthdayId = hash.replace('#/birthday/', '').trim();
 
-        if (!birthdayId || birthdayId === "undefined" || birthdayId === "null" || birthdayId === "[object Object]") {
+        // ✅ FIXED: Use validation function to check ID before proceeding
+        if (!isValidBirthdayId(birthdayId)) {
           showNotFoundError("The link format is invalid.");
+          console.error("Invalid birthday ID in URL:", birthdayId);
           return;
         }
 
         showLoader("Loading Birthday Surprise...");
 
         try {
+          // First try local storage (faster)
           let data = JSON.parse(localStorage.getItem(`bday_${birthdayId}`) || 'null');
 
+          // If not in local storage, fetch from server
           if (!data) {
             const res = await fetch(`${DB_ENDPOINT}/${birthdayId}`);
             if (!res.ok) {
@@ -520,10 +567,13 @@
 
           hideLoader();
 
+          // Validate that data contains required fields
           if (data && data.name) {
             loadExperience(data);
+            console.log("Birthday experience loaded successfully for:", birthdayId);
           } else {
             showNotFoundError("Birthday data record could not be parsed.");
+            console.error("Invalid birthday data structure:", data);
           }
 
         } catch (err) {
@@ -532,7 +582,9 @@
           showNotFoundError("Birthday Surprise Not Found. The link may have expired or is incorrect.");
         }
       } else if (hash !== "" && hash !== "#") {
+        // Unknown hash format
         showNotFoundError("Birthday Surprise Not Found.");
+        console.error("Invalid hash format:", hash);
       }
     }
 
