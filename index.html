@@ -1,398 +1,382 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>A Special Surprise For You ✨</title>
+  <title>Cinematic Birthday Experience ✨</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
-    :root {
-      --primary: #ff2e93;
-      --secondary: #8a2be2;
-      --accent: #ffd700;
-      --bg-dark: #080314;
-      --glass-bg: rgba(255, 255, 255, 0.07);
-      --glass-border: rgba(255, 255, 255, 0.15);
-      --text-main: #ffffff;
-      --text-sub: #d4c5eb;
+    /* THEME SYSTEM CONFIGURATIONS */
+    :root[data-theme="dark"] {
+      --primary: #ff2e93; --secondary: #8a2be2; --accent: #ffd700;
+      --bg: #080314; --card-bg: rgba(255, 255, 255, 0.06);
+      --border: rgba(255, 255, 255, 0.12); --text: #ffffff; --subtext: #d4c5eb;
+    }
+    :root[data-theme="luxury"] {
+      --primary: #d4af37; --secondary: #4a3b1c; --accent: #fff2b2;
+      --bg: #0d0d0d; --card-bg: rgba(212, 175, 55, 0.08);
+      --border: rgba(212, 175, 55, 0.25); --text: #fdfdfd; --subtext: #d1cca1;
+    }
+    :root[data-theme="neon"] {
+      --primary: #00f3ff; --secondary: #ff0055; --accent: #39ff14;
+      --bg: #05050a; --card-bg: rgba(0, 243, 255, 0.05);
+      --border: rgba(0, 243, 255, 0.3); --text: #ffffff; --subtext: #a0f0ff;
+    }
+    :root[data-theme="pastel"] {
+      --primary: #ffb7b2; --secondary: #b5ead7; --accent: #ffdac1;
+      --bg: #2a2438; --card-bg: rgba(255, 183, 178, 0.1);
+      --border: rgba(255, 183, 178, 0.25); --text: #fff5f5; --subtext: #e2cbd8;
+    }
+    :root[data-theme="galaxy"] {
+      --primary: #7928ca; --secondary: #4338ca; --accent: #38bdf8;
+      --bg: #030014; --card-bg: rgba(121, 40, 202, 0.08);
+      --border: rgba(121, 40, 202, 0.3); --text: #ffffff; --subtext: #cbd5e1;
+    }
+    :root[data-theme="minimal"] {
+      --primary: #333333; --secondary: #666666; --accent: #111111;
+      --bg: #f4f4f5; --card-bg: rgba(255, 255, 255, 0.85);
+      --border: rgba(0, 0, 0, 0.1); --text: #18181b; --subtext: #71717a;
+    }
+    :root[data-theme="party"] {
+      --primary: #ec4899; --secondary: #8b5cf6; --accent: #fbbf24;
+      --bg: #1e1b4b; --card-bg: rgba(236, 72, 153, 0.1);
+      --border: rgba(236, 72, 153, 0.3); --text: #ffffff; --subtext: #f3e8ff;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); color: var(--text); transition: background 0.5s ease; }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: var(--bg-dark);
-      color: var(--text-main);
-    }
+    #fx-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
 
-    /* BACKGROUND ANIMATION CANVAS */
-    #fx-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-      background: radial-gradient(circle at 50% 30%, #2a0845 0%, #080314 85%);
+    /* LAYOUT CONTAINERS */
+    .app-viewport { width: 100vw; height: 100vh; position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; padding: 12px; }
+    
+    .screen {
+      width: 100%; max-width: 410px; height: 92vh; max-height: 820px;
+      background: var(--card-bg); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+      border: 1px solid var(--border); border-radius: 32px; padding: 24px 20px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.6); display: flex; flex-direction: column;
+      position: absolute; opacity: 0; visibility: hidden; transform: scale(0.95) translateY(15px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    /* MOBILE CONTAINER */
-    .app-viewport {
-      width: 100vw;
-      height: 100vh;
-      position: relative;
-      z-index: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-    }
-
-    .scene-card {
-      width: 100%;
-      max-width: 380px;
-      background: var(--glass-bg);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      border: 1px solid var(--glass-border);
-      border-radius: 32px;
-      padding: 28px 22px;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255,255,255,0.2);
-      text-align: center;
-      position: absolute;
-      opacity: 0;
-      visibility: hidden;
-      transform: scale(0.9) translateY(20px);
-      transition: none;
-    }
-
-    .scene-card.active {
-      opacity: 1;
-      visibility: visible;
-      transform: scale(1) translateY(0);
-    }
+    .screen.active { opacity: 1; visibility: visible; transform: scale(1) translateY(0); }
+    .screen-content { flex: 1; overflow-y: auto; padding-right: 2px; }
+    .screen-content::-webkit-scrollbar { width: 4px; }
+    .screen-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
     /* TYPOGRAPHY */
-    .title-cinematic {
-      font-family: 'Fredoka', cursive;
-      font-size: 2.2rem;
-      line-height: 1.2;
-      background: linear-gradient(135deg, #ffffff 0%, #ffd700 50%, #ff2e93 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 30px rgba(255, 46, 147, 0.4);
-      margin-bottom: 12px;
-    }
+    h1, h2 { font-family: 'Fredoka', cursive; font-weight: 700; }
+    .title-main { font-size: 1.8rem; line-height: 1.2; background: linear-gradient(135deg, var(--text) 30%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+    .subtitle { color: var(--subtext); font-size: 0.85rem; line-height: 1.4; margin-bottom: 16px; }
 
-    .sub-text {
-      color: var(--text-sub);
-      font-size: 0.9rem;
-      line-height: 1.5;
-      margin-bottom: 20px;
-    }
+    /* FORM COMPONENTS */
+    .form-group { margin-bottom: 12px; text-align: left; }
+    .form-group label { display: block; font-size: 0.7rem; font-weight: 700; color: var(--subtext); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    input, textarea, select { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--border); background: rgba(0,0,0,0.25); color: var(--text); font-size: 0.9rem; outline: none; transition: 0.3s; }
+    input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 12px var(--primary); }
+    select option { background: #111; color: #fff; }
 
-    /* FORM STYLES */
-    .form-group {
-      margin-bottom: 14px;
-      text-align: left;
-    }
-    .form-group label {
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--text-sub);
-      margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    .form-group input, .form-group textarea {
-      width: 100%;
-      padding: 14px;
-      border-radius: 16px;
-      border: 1px solid var(--glass-border);
-      background: rgba(0, 0, 0, 0.5);
-      color: #fff;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    .form-group input:focus, .form-group textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 15px rgba(255, 46, 147, 0.3);
-    }
+    .wizard-steps { display: flex; gap: 6px; margin-bottom: 16px; }
+    .w-step { flex: 1; height: 4px; background: var(--border); border-radius: 2px; transition: 0.3s; }
+    .w-step.active { background: var(--primary); }
 
-    /* BUTTONS */
-    .btn-glow {
-      width: 100%;
-      background: linear-gradient(135deg, #ff2e93 0%, #ff8a00 100%);
-      color: #fff;
-      border: none;
-      padding: 16px 24px;
-      border-radius: 50px;
-      font-size: 1rem;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(255, 46, 147, 0.5);
-      position: relative;
-      overflow: hidden;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .btn-glow:active { transform: scale(0.96); }
+    /* BUTTONS & CONTROLS */
+    .btn-main { width: 100%; background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: #fff; border: none; padding: 14px; border-radius: 50px; font-size: 0.95rem; font-weight: 800; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform 0.2s; margin-top: 10px; }
+    .btn-main:active { transform: scale(0.96); }
+    .btn-row { display: flex; gap: 8px; margin-top: 10px; }
 
-    /* COUNTDOWN GRID */
-    .timer-grid {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 20px 0;
-    }
-    .timer-box {
-      background: rgba(0, 0, 0, 0.4);
-      border: 1px solid var(--glass-border);
-      padding: 10px;
-      border-radius: 16px;
-      min-width: 65px;
-    }
-    .timer-num {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--accent);
-    }
-    .timer-lbl {
-      font-size: 0.6rem;
-      text-transform: uppercase;
-      color: var(--text-sub);
-    }
+    /* THEME SELECTOR GRID */
+    .theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
+    .theme-opt { padding: 10px 6px; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); text-align: center; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .theme-opt.selected { border-color: var(--primary); background: var(--card-bg); box-shadow: 0 0 10px var(--primary); }
 
-    /* CANDLE STAGE */
-    .cake-container {
-      position: relative;
-      width: 140px;
-      height: 140px;
-      margin: 20px auto;
-      cursor: pointer;
-    }
-    .cake-base { font-size: 6rem; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
-    .flame-icon {
-      position: absolute;
-      top: 5px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 2rem;
-      animation: flameFlicker 0.4s infinite alternate;
-      filter: drop-shadow(0 0 15px #ff8a00);
-    }
-    @keyframes flameFlicker {
-      0% { transform: translateX(-50%) scale(0.9) rotate(-2deg); opacity: 0.8; }
-      100% { transform: translateX(-50%) scale(1.1) rotate(2deg); opacity: 1; }
-    }
+    /* PHOTO MANAGEMENT */
+    .photo-upload-zone { border: 2px dashed var(--border); border-radius: 14px; padding: 16px; text-align: center; cursor: pointer; background: rgba(0,0,0,0.1); margin-bottom: 10px; }
+    .photo-preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 160px; overflow-y: auto; margin-bottom: 10px; }
+    .photo-thumb { position: relative; height: 75px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+    .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .photo-thumb button { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.7); color: #fff; border: none; width: 20px; height: 20px; border-radius: 50%; font-size: 10px; cursor: pointer; }
 
-    /* GIFT BOX STAGE */
-    .gift-container {
-      font-size: 6rem;
-      margin: 20px 0;
-      cursor: pointer;
-      display: inline-block;
-      transition: transform 0.2s;
-    }
+    /* MUSIC BAR */
+    .music-widget { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 12px; font-size: 0.8rem; }
+
+    /* RECIPIENT CINEMATIC SEQUENCER */
+    .cinematic-box { text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100%; }
+    
+    .cake-stage { position: relative; width: 130px; height: 130px; margin: 20px auto; cursor: pointer; }
+    .cake-base { font-size: 5.5rem; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
+    .flame-el { position: absolute; top: 0px; left: 50%; transform: translateX(-50%); font-size: 1.8rem; animation: flicker 0.35s infinite alternate; filter: drop-shadow(0 0 12px var(--accent)); }
+    @keyframes flicker { 0% { transform: translateX(-50%) scale(0.9) rotate(-3deg); opacity: 0.8; } 100% { transform: translateX(-50%) scale(1.1) rotate(3deg); opacity: 1; } }
+
+    .gift-box-el { font-size: 5.5rem; margin: 20px 0; cursor: pointer; display: inline-block; transition: transform 0.2s; }
 
     /* POLAROID CAROUSEL */
-    .polaroid-card {
-      background: #ffffff;
-      padding: 12px 12px 24px 12px;
-      border-radius: 12px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-      transform: rotate(-2deg);
-      margin: 15px auto;
-      max-width: 260px;
-    }
-    .polaroid-card img {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 6px;
-      transition: opacity 0.3s ease;
-    }
-    .carousel-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 10px;
-    }
-    .carousel-btn {
-      background: rgba(0,0,0,0.08);
-      border: none;
-      padding: 6px 14px;
-      border-radius: 12px;
-      font-weight: 700;
-      color: #333;
-      cursor: pointer;
-    }
+    .polaroid-card { background: #fff; color: #222; padding: 10px 10px 22px 10px; border-radius: 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); transform: rotate(-1.5deg); margin: 10px auto; max-width: 250px; }
+    .polaroid-card img { width: 100%; height: 190px; object-fit: cover; border-radius: 4px; transition: opacity 0.3s; }
+    .gallery-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+    .g-btn { background: rgba(0,0,0,0.1); border: none; padding: 4px 10px; border-radius: 8px; font-weight: 700; font-size: 0.75rem; cursor: pointer; color: #333; }
+
+    /* COUNTDOWN */
+    .timer-row { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
+    .t-box { background: rgba(0,0,0,0.3); border: 1px solid var(--border); padding: 8px; border-radius: 12px; min-width: 58px; }
+    .t-val { font-size: 1.2rem; font-weight: 800; color: var(--accent); }
+    .t-lbl { font-size: 0.55rem; text-transform: uppercase; color: var(--subtext); }
 
     /* TYPEWRITER LETTER */
-    .typewriter-box {
-      font-family: 'Dancing Script', cursive;
-      font-size: 1.4rem;
-      color: var(--accent);
-      min-height: 80px;
-      margin: 15px 0;
-      line-height: 1.4;
-    }
+    .letter-paper { font-family: 'Dancing Script', cursive; font-size: 1.35rem; color: var(--accent); min-height: 90px; max-height: 140px; overflow-y: auto; line-height: 1.4; margin: 12px 0; padding: 10px; background: rgba(0,0,0,0.15); border-radius: 10px; border: 1px solid var(--border); }
 
+    /* UTILS & MODALS */
+    .loader-overlay { position: fixed; inset: 0; background: rgba(5,3,10,0.85); z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    
+    .badge-tag { display: inline-block; padding: 4px 10px; border-radius: 20px; background: rgba(255,255,255,0.1); font-size: 0.7rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
     .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <!-- FX BACKGROUND CANVAS -->
   <canvas id="fx-canvas"></canvas>
+
+  <!-- GLOBAL LOADER -->
+  <div id="app-loader" class="loader-overlay hidden">
+    <div class="spinner"></div>
+    <p id="loader-msg" style="font-weight: 600; color: var(--accent); font-size: 0.9rem;">Processing Data...</p>
+  </div>
 
   <div class="app-viewport">
 
-    <!-- CREATOR SCENE -->
-    <div id="scene-creator" class="scene-card active">
-      <h1 class="title-cinematic">Surprise Studio</h1>
-      <p class="sub-text">Create an interactive animated birthday movie link.</p>
-
-      <div class="form-group">
-        <label>Birthday Person Name *</label>
-        <input type="text" id="in-name" placeholder="e.g. Shridha">
+    <!-- ============================================== -->
+    <!-- CREATOR PANEL (MULTI-STEP WIZARD)             -->
+    <!-- ============================================== -->
+    <div id="screen-creator" class="screen active">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+        <h1 style="font-size: 1.4rem;">🎁 Surprise Studio</h1>
+        <div id="preview-toggle-btn" style="font-size:0.75rem; font-weight:700; color:var(--primary); cursor:pointer;" onclick="toggleLivePreviewMode()">Live Preview 👁️</div>
       </div>
 
-      <div class="form-group">
-        <label>Turning Age (Optional)</label>
-        <input type="number" id="in-age" placeholder="e.g. 21">
+      <div class="wizard-steps">
+        <div class="w-step active" id="ws-1"></div>
+        <div class="w-step" id="ws-2"></div>
+        <div class="w-step" id="ws-3"></div>
+        <div class="w-step" id="ws-4"></div>
       </div>
 
-      <div class="form-group">
-        <label>Birthday Date</label>
-        <input type="datetime-local" id="in-date">
-      </div>
+      <div class="screen-content">
+        <!-- STEP 1: DETAILS -->
+        <div class="w-panel" id="panel-1">
+          <h2 class="title-main" style="font-size: 1.3rem;">Birthday Profile</h2>
+          <p class="subtitle">Who is this cinematic surprise dedicated to?</p>
 
-      <div class="form-group">
-        <label>Personal Wish / Letter</label>
-        <textarea id="in-msg" rows="3" placeholder="Write something heartfelt..."></textarea>
-      </div>
+          <div class="form-group"><label>Recipient Full Name *</label><input type="text" id="c-name" placeholder="e.g. Aarav Sharma"></div>
+          <div class="form-group"><label>Cute Nickname / Title</label><input type="text" id="c-nickname" placeholder="e.g. Bestie / Rockstar / My Love"></div>
+          <div class="form-group"><label>Turning Age</label><input type="number" id="c-age" placeholder="e.g. 22"></div>
+          <div class="form-group"><label>Birthday Target Date & Time</label><input type="datetime-local" id="c-date"></div>
+          <div class="form-group"><label>Sender / Creator Name *</label><input type="text" id="c-sender" placeholder="e.g. Priya"></div>
+          <div class="form-group"><label>Heartfelt Letter / Message</label><textarea id="c-msg" rows="3" placeholder="Write your personalized emotional wish here..."></textarea></div>
+          
+          <button class="btn-main" onclick="setWizardStep(2)">Next: Photos 📸</button>
+        </div>
 
-      <div class="form-group">
-        <label id="photo-label">Upload Photos (Max 5)</label>
-        <input type="file" id="in-photos" multiple accept="image/*" onchange="processPhotos(event)">
-      </div>
+        <!-- STEP 2: PHOTOS -->
+        <div class="w-panel hidden" id="panel-2">
+          <h2 class="title-main" style="font-size: 1.3rem;">Memory Gallery</h2>
+          <p class="subtitle">Upload photos for the cinematic polaroid reel.</p>
 
-      <button class="btn-glow" onclick="generateLink()">✨ Generate Animated Link</button>
+          <div class="photo-upload-zone" onclick="document.getElementById('file-selector').click()">
+            <div style="font-size: 1.8rem; margin-bottom: 4px;">📂</div>
+            <p style="font-size: 0.8rem; font-weight: 700;">Tap to select photos (Max 10)</p>
+            <input type="file" id="file-selector" multiple accept="image/*" class="hidden" onchange="handlePhotoUploads(event)">
+          </div>
 
-      <div id="share-box" class="hidden" style="margin-top: 18px;">
-        <p style="font-size: 0.75rem; color: var(--accent); word-break: break-all;" id="share-url-text"></p>
-        <div id="qrcode" style="display:flex; justify-content:center; margin: 12px 0;"></div>
-        <button class="btn-glow" style="padding:10px;" onclick="copyLink()">📋 Copy Link</button>
-      </div>
-    </div>
+          <div class="photo-preview-grid" id="photo-preview-container"></div>
 
-    <!-- RECIPIENT SCENE 1: ENVELOPE INTRO -->
-    <div id="scene-1" class="scene-card">
-      <div style="font-size: 5rem; margin-bottom: 10px; filter: drop-shadow(0 0 20px rgba(255,46,147,0.6));">💌</div>
-      <h1 class="title-cinematic">A Surprise Awaits!</h1>
-      <p class="sub-text">A special celebration has been crafted exclusively for you.</p>
-      <button class="btn-glow" onclick="goToScene(2)">Open Surprise ✨</button>
-    </div>
+          <div class="btn-row">
+            <button class="btn-main" style="background:rgba(255,255,255,0.1);" onclick="setWizardStep(1)">Back</button>
+            <button class="btn-main" onclick="setWizardStep(3)">Next: Themes 🎨</button>
+          </div>
+        </div>
 
-    <!-- RECIPIENT SCENE 2: HERO & COUNTDOWN -->
-    <div id="scene-2" class="scene-card">
-      <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--accent);">Celebrating You</p>
-      <h1 class="title-cinematic" id="view-name">Happy Birthday!</h1>
-      <p class="sub-text" id="view-age"></p>
+        <!-- STEP 3: THEMES & MUSIC -->
+        <div class="w-panel hidden" id="panel-3">
+          <h2 class="title-main" style="font-size: 1.3rem;">Theme & Vibe</h2>
+          <p class="subtitle">Select your aesthetic style and atmospheric music.</p>
 
-      <div class="timer-grid">
-        <div class="timer-box"><div class="timer-num" id="t-d">00</div><div class="timer-lbl">Days</div></div>
-        <div class="timer-box"><div class="timer-num" id="t-h">00</div><div class="timer-lbl">Hours</div></div>
-        <div class="timer-box"><div class="timer-num" id="t-m">00</div><div class="timer-lbl">Mins</div></div>
-        <div class="timer-box"><div class="timer-num" id="t-s">00</div><div class="timer-lbl">Secs</div></div>
-      </div>
+          <label style="font-size: 0.7rem; font-weight: 700; color: var(--subtext); margin-bottom: 6px; display:block;">VISUAL THEME</label>
+          <div class="theme-grid">
+            <div class="theme-opt selected" onclick="selectTheme('dark', this)">Dark Cosmic</div>
+            <div class="theme-opt" onclick="selectTheme('luxury', this)">Luxury Gold</div>
+            <div class="theme-opt" onclick="selectTheme('neon', this)">Cyber Neon</div>
+            <div class="theme-opt" onclick="selectTheme('pastel', this)">Soft Pastel</div>
+            <div class="theme-opt" onclick="selectTheme('galaxy', this)">Deep Galaxy</div>
+            <div class="theme-opt" onclick="selectTheme('party', this)">Party Pop</div>
+          </div>
 
-      <button class="btn-glow" onclick="goToScene(3)">Make a Wish 🎂</button>
-    </div>
+          <div class="form-group">
+            <label>Background Atmosphere Track</label>
+            <select id="c-music" onchange="previewCreatorMusic()">
+              <option value="none">✨ None / Pure Silence</option>
+              <option value="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-to-you-559.mp3">🎂 Happy Birthday Instrumental</option>
+              <option value="https://assets.mixkit.co/music/preview/mixkit-magical-suspense-196.mp3">🌌 Magical Cinematic Ambient</option>
+              <option value="https://assets.mixkit.co/music/preview/mixkit-uplifting-flute-2216.mp3">🌸 Uplifting Celebration Beat</option>
+            </select>
+          </div>
 
-    <!-- RECIPIENT SCENE 3: INTERACTIVE CAKE -->
-    <div id="scene-3" class="scene-card">
-      <h1 class="title-cinematic">Make a Wish</h1>
-      <p class="sub-text">Tap the candle flame to blow it out!</p>
+          <div class="music-widget">
+            <span id="music-status-txt">Audio: Stopped</span>
+            <button class="g-btn" onclick="toggleCreatorAudio()" id="music-toggle-btn">Play Preview 🎵</button>
+          </div>
 
-      <div class="cake-container" onclick="blowFlame()">
-        <span class="flame-icon" id="flame-el">🔥</span>
-        <span class="cake-base">🎂</span>
-      </div>
+          <div class="btn-row">
+            <button class="btn-main" style="background:rgba(255,255,255,0.1);" onclick="setWizardStep(2)">Back</button>
+            <button class="btn-main" onclick="publishBirthdayPage()">🚀 Publish Surprise</button>
+          </div>
+        </div>
 
-      <button id="btn-to-gift" class="btn-glow hidden" onclick="goToScene(4)">Unwrap Present 🎁</button>
-    </div>
+        <!-- STEP 4: PUBLISHED SUCCESS & LINK -->
+        <div class="w-panel hidden" id="panel-4">
+          <div style="text-align:center; padding: 10px 0;">
+            <div style="font-size: 3.5rem; margin-bottom: 8px;">🎉</div>
+            <h2 class="title-main" style="font-size: 1.5rem;">Ready to Share!</h2>
+            <p class="subtitle">Your unique cinematic surprise link has been successfully generated.</p>
 
-    <!-- RECIPIENT SCENE 4: INTERACTIVE GIFT -->
-    <div id="scene-4" class="scene-card">
-      <h1 class="title-cinematic">Your Gift Box</h1>
-      <p class="sub-text">Tap the gift box to open your surprise!</p>
+            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:12px; border:1px solid var(--border); margin-bottom:12px;">
+              <p style="font-size:0.75rem; color:var(--accent); word-break:break-all;" id="final-share-url"></p>
+            </div>
 
-      <div class="gift-container" id="gift-el" onclick="openGift()">🎁</div>
+            <div id="qrcode-container" style="display:flex; justify-content:center; margin:12px 0;"></div>
 
-      <div id="gift-reveal" class="hidden">
-        <p style="color: var(--accent); font-weight: 800; margin-bottom: 14px;">✨ Surprise Unlocked! ✨</p>
-        <button class="btn-glow" onclick="goToScene(5)">Read Memory Letter 📸</button>
-      </div>
-    </div>
-
-    <!-- RECIPIENT SCENE 5: POLAROID GALLERY & LETTER -->
-    <div id="scene-5" class="scene-card">
-      <h1 class="title-cinematic">Memories & Wishes</h1>
-
-      <div class="polaroid-card">
-        <img id="view-photo" src="https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=400&q=80">
-        <div class="carousel-controls">
-          <button class="carousel-btn" onclick="prevPhoto()">◀</button>
-          <span id="photo-counter" style="font-size:0.75rem; font-weight:700; color:#333;">1 / 1</span>
-          <button class="carousel-btn" onclick="nextPhoto()">▶</button>
+            <button class="btn-main" onclick="copyFinalLink()">📋 Copy Share Link</button>
+            <button class="btn-main" style="background:linear-gradient(135deg, #25D366, #128C7E);" onclick="shareOnWhatsApp()">💬 Share on WhatsApp</button>
+            <button class="btn-main" style="background:rgba(255,255,255,0.1);" onclick="resetCreatorStudio()">✨ Create Another Surprise</button>
+          </div>
         </div>
       </div>
-
-      <div class="typewriter-box" id="typewriter-output"></div>
-
-      <button class="btn-glow" onclick="goToScene(6)">Grand Finale 🎉</button>
     </div>
 
-    <!-- RECIPIENT SCENE 6: GRAND FINALE -->
-    <div id="scene-6" class="scene-card">
-      <h1 class="title-cinematic" id="finale-title">Happy Birthday!</h1>
-      <p class="sub-text" id="finale-msg"></p>
-      <div style="font-size: 4rem; margin: 20px 0; animation: bounce 1.5s infinite alternate;">🥳🎉✨</div>
-      <button class="btn-glow" onclick="goToScene(1)">Replay Experience 🔄</button>
+
+    <!-- ============================================== -->
+    <!-- RECIPIENT CINEMATIC EXPERIENCE SCREENS        -->
+    <!-- ============================================== -->
+    
+    <!-- RECIPIENT SCENE 0: OPENING INTRO -->
+    <div id="scene-0" class="screen">
+      <div class="cinematic-box">
+        <div style="font-size: 5rem; margin-bottom: 12px; filter: drop-shadow(0 0 25px var(--primary));">💌</div>
+        <span class="badge-tag" id="rec-sender-tag">Someone Special</span>
+        <h1 class="title-main" style="font-size: 2rem;">A Surprise Is Waiting</h1>
+        <p class="subtitle">A cinematic birthday journey has been custom-crafted for you.</p>
+        <button class="btn-main" onclick="advanceRecipientScene(1)">OPEN YOUR SURPRISE 🎁</button>
+      </div>
+    </div>
+
+    <!-- RECIPIENT SCENE 1: HERO & COUNTDOWN -->
+    <div id="scene-1" class="screen">
+      <div class="cinematic-box">
+        <span class="badge-tag">Celebrating You</span>
+        <h1 class="title-main" id="rec-title-name" style="font-size: 2.3rem;">Happy Birthday!</h1>
+        <p class="subtitle" id="rec-age-subtitle"></p>
+
+        <div class="timer-row" id="countdown-block">
+          <div class="t-box"><div class="t-val" id="t-d">00</div><div class="t-lbl">Days</div></div>
+          <div class="t-box"><div class="t-val" id="t-h">00</div><div class="t-lbl">Hours</div></div>
+          <div class="t-box"><div class="t-val" id="t-m">00</div><div class="t-lbl">Mins</div></div>
+          <div class="t-box"><div class="t-val" id="t-s">00</div><div class="t-lbl">Secs</div></div>
+        </div>
+
+        <button class="btn-main" onclick="advanceRecipientScene(2)" style="margin-top: 15px;">Make a Wish 🎂</button>
+      </div>
+    </div>
+
+    <!-- RECIPIENT SCENE 2: INTERACTIVE CAKE -->
+    <div id="scene-2" class="screen">
+      <div class="cinematic-box">
+        <h2 class="title-main" style="font-size: 1.8rem;">Blow Out Candles</h2>
+        <p class="subtitle">Tap the glowing flame to make your birthday wish!</p>
+        
+        <div class="cake-stage" onclick="triggerCakeWish()">
+          <span class="flame-el" id="cake-flame">🔥</span>
+          <span class="cake-base">🎂</span>
+        </div>
+
+        <div id="wish-notice" class="hidden" style="color:var(--accent); font-weight:800; font-size:1.1rem; margin-bottom:10px;">✨ Make a Wish! ✨</div>
+        <button id="cake-next-btn" class="btn-main hidden" onclick="advanceRecipientScene(3)">Open Gift Box 🎁</button>
+      </div>
+    </div>
+
+    <!-- RECIPIENT SCENE 3: GIFT BOX UNBOXING -->
+    <div id="scene-3" class="screen">
+      <div class="cinematic-box">
+        <h2 class="title-main" style="font-size: 1.8rem;">Surprise Gift Box</h2>
+        <p class="subtitle">Tap your gift package to unwrap it!</p>
+
+        <div class="gift-box-el" id="gift-box-icon" onclick="triggerGiftUnbox()">🎁</div>
+
+        <div id="gift-unlocked-panel" class="hidden">
+          <p style="color:var(--accent); font-weight:800; margin-bottom:12px;">✨ Gift Unlocked Successfully! ✨</p>
+          <button class="btn-main" onclick="advanceRecipientScene(4)">Read Personal Letter 💌</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECIPIENT SCENE 4: LETTER & MEMORIES -->
+    <div id="scene-4" class="screen">
+      <div class="cinematic-box" style="justify-content: flex-start; padding-top: 10px;">
+        <h2 class="title-main" style="font-size: 1.5rem; margin-bottom: 4px;">Memories & Wishes</h2>
+
+        <div class="polaroid-card">
+          <img id="rec-polaroid-img" src="" alt="Memory">
+          <div class="gallery-nav">
+            <button class="g-btn" onclick="shiftPolaroidPhoto(-1)">◀ Prev</button>
+            <span id="rec-photo-count" style="font-size:0.7rem; font-weight:700; color:#333;">1 / 1</span>
+            <button class="g-btn" onclick="shiftPolaroidPhoto(1)">Next ▶</button>
+          </div>
+        </div>
+
+        <div class="letter-paper" id="rec-typewriter-text"></div>
+
+        <button class="btn-main" onclick="advanceRecipientScene(5)" style="margin-top: 5px;">Grand Finale 🎉</button>
+      </div>
+    </div>
+
+    <!-- RECIPIENT SCENE 5: GRAND CELEBRATION FINALE -->
+    <div id="scene-5" class="screen">
+      <div class="cinematic-box">
+        <h1 class="title-main" id="rec-finale-title" style="font-size: 2.2rem;">Happy Birthday!</h1>
+        <p class="subtitle" id="rec-finale-sub">Wishing you a spectacular year ahead filled with love and success.</p>
+        <div style="font-size: 3.5rem; margin: 15px 0; animation: bounce 1.5s infinite alternate;">🥳🎉✨</div>
+        <button class="btn-main" onclick="exitToCreatorStudio()">Create Your Own Surprise ✨</button>
+      </div>
     </div>
 
   </div>
 
   <script>
-    let uploadedPhotos = [];
-    let galleryPhotos = [];
-    let photoIdx = 0;
-    let currentSceneIdx = 1;
-    let payloadData = null;
+    // Database storage endpoint (ExtendsClass public persistent JSON bin store)
+    const DB_ENDPOINT = "https://json.extendsclass.com/bin";
+    const IMG_BB_KEY = "6d201075ebb1ca238a4176751272782e";
 
-    /* 60FPS COSMIC CANVAS ENGINE */
+    let creatorState = {
+      name: "", nickname: "", age: "", date: "", sender: "", msg: "",
+      photos: [], theme: "dark", music: "none"
+    };
+
+    let activePhotosList = [];
+    let polaroidIndex = 0;
+    let currentWizardStep = 1;
+    let recipientCurrentScene = 0;
+    let previewModeActive = false;
+    let audioContextPlayer = null;
+
+    /* ============================================== */
+    /* 60FPS BACKGROUND PARTICLE & BALLOON ENGINE     */
+    /* ============================================== */
     const canvas = document.getElementById('fx-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -406,15 +390,13 @@
     resizeCanvas();
 
     class Particle {
-      constructor() {
-        this.reset();
-      }
+      constructor() { this.reset(); }
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2.5 + 0.5;
-        this.speedY = Math.random() * 0.4 + 0.1;
-        this.alpha = Math.random() * 0.8 + 0.2;
+        this.size = Math.random() * 2.2 + 0.5;
+        this.speedY = Math.random() * 0.3 + 0.1;
+        this.alpha = Math.random() * 0.7 + 0.2;
       }
       update() {
         this.y -= this.speedY;
@@ -429,19 +411,17 @@
     }
 
     class Balloon {
-      constructor() {
+      constructor() { this.reset(); }
+      reset() {
         this.x = Math.random() * canvas.width;
-        this.y = canvas.height + Math.random() * 100;
-        this.radius = Math.random() * 12 + 10;
-        this.speed = Math.random() * 0.8 + 0.3;
-        this.color = ['#ff2e93', '#8a2be2', '#ffd700', '#ff8a00'][Math.floor(Math.random() * 4)];
+        this.y = canvas.height + 40;
+        this.radius = Math.random() * 10 + 8;
+        this.speed = Math.random() * 0.6 + 0.2;
+        this.color = ['#ff2e93', '#8a2be2', '#ffd700', '#38bdf8', '#ec4899'][Math.floor(Math.random() * 5)];
       }
       update() {
         this.y -= this.speed;
-        if (this.y < -50) {
-          this.y = canvas.height + 50;
-          this.x = Math.random() * canvas.width;
-        }
+        if (this.y < -40) this.reset();
       }
       draw() {
         ctx.fillStyle = this.color;
@@ -451,191 +431,353 @@
       }
     }
 
-    for (let i = 0; i < 40; i++) particles.push(new Particle());
-    for (let i = 0; i < 12; i++) balloons.push(new Balloon());
+    for (let i = 0; i < 35; i++) particles.push(new Particle());
+    for (let i = 0; i < 8; i++) balloons.push(new Balloon());
 
-    function animLoop() {
+    function renderLoop() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => { p.update(); p.draw(); });
       balloons.forEach(b => { b.update(); b.draw(); });
-      requestAnimationFrame(animLoop);
+      requestAnimationFrame(renderLoop);
     }
-    animLoop();
+    renderLoop();
 
-    /* ULTRA IMAGE COMPRESSION (KEPT ULTRA-SMALL FOR SHORT URLS) */
-    function processPhotos(e) {
-      const files = Array.from(e.target.files).slice(0, 5);
-      uploadedPhotos = [];
-      document.getElementById('photo-label').innerText = `Optimizing (${files.length} photos)...`;
+    /* ============================================== */
+    /* CREATOR STUDIO WIZARD CONTROLS                */
+    /* ============================================== */
+    function setWizardStep(step) {
+      if (step === 2) {
+        const name = document.getElementById('c-name').value.trim();
+        const sender = document.getElementById('c-sender').value.trim();
+        if (!name || !sender) {
+          alert("Please enter both Recipient Name and Sender Name.");
+          return;
+        }
+      }
       
-      let done = 0;
-      files.forEach(file => {
+      currentWizardStep = step;
+      document.querySelectorAll('.w-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`panel-${step}`).classList.remove('hidden');
+
+      for (let i = 1; i <= 4; i++) {
+        const bar = document.getElementById(`ws-${i}`);
+        if (i <= step) bar.classList.add('active');
+        else bar.classList.remove('active');
+      }
+    }
+
+    function selectTheme(themeName, el) {
+      document.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      creatorState.theme = themeName;
+      document.documentElement.setAttribute('data-theme', themeName);
+    }
+
+    async function handlePhotoUploads(e) {
+      const files = Array.from(e.target.files).slice(0, 10);
+      showLoader("Compressing & Optimizing Photos...");
+
+      for (let file of files) {
+        const optimizedBase64 = await resizeAndCompressImage(file);
+        activePhotosList.push(optimizedBase64);
+      }
+
+      hideLoader();
+      renderPhotoPreviews();
+    }
+
+    function resizeAndCompressImage(file) {
+      return new Promise((resolve) => {
         const reader = new FileReader();
-        reader.onload = (evt) => {
+        reader.onload = (event) => {
           const img = new Image();
           img.onload = () => {
-            const cvs = document.createElement('canvas');
-            const cctx = cvs.getContext('2d');
-            
-            // Ultra downsample dimension max 180px
-            const maxDim = 180;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
             let w = img.width, h = img.height;
-            if (w > h) {
-              if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
-            } else {
-              if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
-            }
-            
-            cvs.width = w; cvs.height = h;
-            cctx.drawImage(img, 0, 0, w, h);
-            
-            // High compression JPEG string
-            const compressed = cvs.toDataURL('image/jpeg', 0.35);
-            uploadedPhotos.push(compressed);
-            
-            done++;
-            if (done === files.length) {
-              document.getElementById('photo-label').innerText = `Upload Photos (${files.length} ready)`;
-            }
+            const maxDim = 800;
+            if (w > h) { if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; } }
+            else { if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; } }
+            canvas.width = w; canvas.height = h;
+            ctx.drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL('image/jpeg', 0.75));
           };
-          img.src = evt.target.result;
+          img.src = event.target.result;
         };
         reader.readAsDataURL(file);
       });
     }
 
-    /* GENERATE COMPACT URL */
-    function generateLink() {
-      const name = document.getElementById('in-name').value.trim();
-      if (!name) return alert("Please enter a recipient name!");
-
-      const payload = {
-        n: name,
-        a: document.getElementById('in-age').value,
-        d: document.getElementById('in-date').value,
-        m: document.getElementById('in-msg').value,
-        p: uploadedPhotos
-      };
-
-      const baseDomain = window.location.origin + window.location.pathname;
-      const encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(payload)))));
-      const fullUrl = `${baseDomain}?data=${encoded}`;
-
-      document.getElementById('share-url-text').innerText = fullUrl;
-      document.getElementById('share-box').classList.remove('hidden');
-      document.getElementById('qrcode').innerHTML = "";
-      new QRCode(document.getElementById('qrcode'), { text: fullUrl, width: 120, height: 120 });
+    function renderPhotoPreviews() {
+      const container = document.getElementById('photo-preview-container');
+      container.innerHTML = "";
+      activePhotosList.forEach((src, idx) => {
+        const thumb = document.createElement('div');
+        thumb.className = 'photo-thumb';
+        thumb.innerHTML = `<img src="${src}"><button onclick="removePhoto(${idx})">✕</button>`;
+        container.appendChild(thumb);
+      });
     }
 
-    function copyLink() {
-      navigator.clipboard.writeText(document.getElementById('share-url-text').innerText);
+    function removePhoto(idx) {
+      activePhotosList.splice(idx, 1);
+      renderPhotoPreviews();
+    }
+
+    /* MUSIC PREVIEW MANAGEMENT */
+    function previewCreatorMusic() {
+      const trackUrl = document.getElementById('c-music').value;
+      creatorState.music = trackUrl;
+      if (audioContextPlayer) { audioContextPlayer.pause(); audioContextPlayer = null; }
+      document.getElementById('music-status-txt').innerText = "Audio: Ready";
+    }
+
+    function toggleCreatorAudio() {
+      const trackUrl = document.getElementById('c-music').value;
+      if (trackUrl === 'none') return alert("Please select a valid background track first.");
+
+      if (!audioContextPlayer) {
+        audioContextPlayer = new Audio(trackUrl);
+        audioContextPlayer.loop = true;
+        audioContextPlayer.play().then(() => {
+          document.getElementById('music-status-txt').innerText = "Audio: Playing 🎵";
+          document.getElementById('music-toggle-btn').innerText = "Pause ⏸";
+        }).catch(err => {
+          alert("Browser blocked autoplay. Tap play again.");
+        });
+      } else {
+        if (!audioContextPlayer.paused) {
+          audioContextPlayer.pause();
+          document.getElementById('music-status-txt').innerText = "Audio: Paused";
+          document.getElementById('music-toggle-btn').innerText = "Play Preview 🎵";
+        } else {
+          audioContextPlayer.play();
+          document.getElementById('music-status-txt').innerText = "Audio: Playing 🎵";
+          document.getElementById('music-toggle-btn').innerText = "Pause ⏸";
+        }
+      }
+    }
+
+    /* ============================================== */
+    /* PUBLISHING & CLOUD DATABASE SYNC               */
+    /* ============================================== */
+    async function publishBirthdayPage() {
+      showLoader("Publishing Surprise to Cloud Database...");
+
+      creatorState.name = document.getElementById('c-name').value.trim();
+      creatorState.nickname = document.getElementById('c-nickname').value.trim();
+      creatorState.age = document.getElementById('c-age').value.trim();
+      creatorState.date = document.getElementById('c-date').value.trim();
+      creatorState.sender = document.getElementById('c-sender').value.trim();
+      creatorState.msg = document.getElementById('c-msg').value.trim();
+      creatorState.photos = activePhotosList.length > 0 ? activePhotosList : [
+        "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80",
+        "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=600&q=80"
+      ];
+
+      try {
+        const response = await fetch(DB_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(creatorState)
+        });
+        const result = await response.json();
+        const uniqueId = result.id; // Clean short identifier e.g. "a7K9x2"
+
+        hideLoader();
+
+        const generatedShareUrl = `${window.location.origin}${window.location.pathname}#/${uniqueId}`;
+        document.getElementById('final-share-url').innerText = generatedShareUrl;
+        
+        const qrBox = document.getElementById('qrcode-container');
+        qrBox.innerHTML = "";
+        new QRCode(qrBox, { text: generatedShareUrl, width: 110, height: 110 });
+
+        setWizardStep(4);
+      } catch (err) {
+        hideLoader();
+        alert("Network publishing failed. Please try again.");
+      }
+    }
+
+    function copyFinalLink() {
+      navigator.clipboard.writeText(document.getElementById('final-share-url').innerText);
       alert("Surprise link copied to clipboard!");
     }
 
-    /* SCENE ROUTER & CINEMATIC GSAP TRANSITIONS */
-    function goToScene(targetIdx) {
-      const currentEl = document.getElementById(`scene-${currentSceneIdx}`) || document.getElementById('scene-creator');
-      const targetEl = document.getElementById(`scene-${targetIdx}`);
+    function shareOnWhatsApp() {
+      const url = document.getElementById('final-share-url').innerText;
+      const text = encodeURIComponent(`You have a special cinematic birthday surprise waiting for you! Open it here: ${url}`);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    }
+
+    function resetCreatorStudio() {
+      if (audioContextPlayer) { audioContextPlayer.pause(); audioContextPlayer = null; }
+      activePhotosList = [];
+      renderPhotoPreviews();
+      document.getElementById('c-name').value = "";
+      document.getElementById('c-sender').value = "";
+      document.getElementById('c-msg').value = "";
+      setWizardStep(1);
+    }
+
+    /* ============================================== */
+    /* LIVE PREVIEW TOGGLE                            */
+    /* ============================================== */
+    function toggleLivePreviewMode() {
+      const name = document.getElementById('c-name').value.trim() || "Aarav Sharma";
+      const sender = document.getElementById('c-sender').value.trim() || "Priya";
+      const msg = document.getElementById('c-msg').value.trim() || "Wishing you an extraordinary year ahead filled with joy and success!";
+      
+      const previewPayload = {
+        name, nickname: document.getElementById('c-nickname').value.trim() || "Bestie",
+        age: document.getElementById('c-age').value.trim() || "22",
+        date: document.getElementById('c-date').value.trim(),
+        sender, msg,
+        photos: activePhotosList.length > 0 ? activePhotosList : [
+          "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80"
+        ],
+        theme: creatorState.theme,
+        music: document.getElementById('c-music').value
+      };
+
+      previewModeActive = true;
+      loadRecipientExperience(previewPayload);
+    }
+
+    function exitToCreatorStudio() {
+      if (audioContextPlayer) { audioContextPlayer.pause(); audioContextPlayer = null; }
+      previewModeActive = false;
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen-creator').classList.add('active');
+    }
+
+    /* ============================================== */
+    /* RECIPIENT EXPERIENCE ENGINE                    */
+    /* ============================================== */
+    let loadedRecipientData = null;
+
+    async function loadRecipientExperience(data) {
+      loadedRecipientData = data;
+      document.documentElement.setAttribute('data-theme', data.theme || 'dark');
+
+      // Populate text nodes
+      document.getElementById('rec-sender-tag').innerText = `Prepared by ${data.sender}`;
+      document.getElementById('rec-title-name').innerText = `Happy Birthday, ${data.name}!`;
+      document.getElementById('rec-age-subtitle').innerText = data.age ? `Turning ${data.age} Years Young ✨` : "";
+      document.getElementById('rec-finale-title').innerText = `Happy Birthday, ${data.name}! 🎉`;
+      document.getElementById('rec-finale-sub').innerText = data.msg;
+
+      // Initialize photos & countdown
+      activePhotosList = data.photos || [];
+      polaroidIndex = 0;
+      updatePolaroidPhoto();
+      startCountdownTimer(data.date);
+
+      // Play background audio if selected
+      if (data.music && data.music !== 'none' && !audioContextPlayer) {
+        audioContextPlayer = new Audio(data.music);
+        audioContextPlayer.loop = true;
+        audioContextPlayer.play().catch(() => {});
+      }
+
+      // Switch to Scene 0 (Intro)
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('scene-0').classList.add('active');
+    }
+
+    function advanceRecipientScene(targetSceneIdx) {
+      const currentEl = document.querySelector('.screen.active');
+      const targetEl = document.getElementById(`scene-${targetSceneIdx}`);
 
       gsap.to(currentEl, {
-        duration: 0.4,
-        opacity: 0,
-        scale: 0.85,
-        y: -20,
+        duration: 0.35, opacity: 0, scale: 0.85, y: -20,
         onComplete: () => {
           currentEl.classList.remove('active');
           targetEl.classList.add('active');
-          gsap.fromTo(targetEl, 
-            { opacity: 0, scale: 1.1, y: 30 }, 
-            { duration: 0.5, opacity: 1, scale: 1, y: 0, ease: "back.out(1.2)" }
-          );
-          currentSceneIdx = targetIdx;
-          onSceneEnter(targetIdx);
+          gsap.fromTo(targetEl, { opacity: 0, scale: 1.1, y: 25 }, { duration: 0.45, opacity: 1, scale: 1, y: 0, ease: "back.out(1.2)" });
+          recipientCurrentScene = targetSceneIdx;
+          onRecipientSceneEnter(targetSceneIdx);
         }
       });
     }
 
-    function onSceneEnter(idx) {
-      if (idx === 2) {
-        confetti({ particleCount: 60, spread: 60, origin: { y: 0.7 } });
+    function onRecipientSceneEnter(sceneIdx) {
+      if (sceneIdx === 1) {
+        confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
       }
-      if (idx === 5) {
-        let msg = payloadData?.m || "Wishing you a beautiful day filled with everlasting joy, smiles, and laughter!";
+      if (sceneIdx === 4) {
+        // Typewriter Effect
+        let msg = loadedRecipientData?.msg || "Wishing you a magical day filled with infinite joy and light!";
         let charIdx = 0;
-        document.getElementById('typewriter-output').innerText = "";
-        function typeNext() {
+        document.getElementById('rec-typewriter-text').innerText = "";
+        function runTypewriter() {
           if (charIdx < msg.length) {
-            document.getElementById('typewriter-output').innerText += msg.charAt(charIdx);
+            document.getElementById('rec-typewriter-text').innerText += msg.charAt(charIdx);
             charIdx++;
-            setTimeout(typeNext, 40);
+            setTimeout(runTypewriter, 35);
           }
         }
-        typeNext();
+        runTypewriter();
       }
-      if (idx === 6) {
+      if (sceneIdx === 5) {
         let count = 0;
         let interval = setInterval(() => {
-          confetti({ particleCount: 50, spread: 80, origin: { y: 0.6 } });
+          confetti({ particleCount: 50, spread: 90, origin: { y: 0.5 } });
           count++;
-          if(count > 4) clearInterval(interval);
+          if (count > 4) clearInterval(interval);
         }, 1200);
       }
     }
 
-    /* INTERACTION LOGIC */
-    function blowFlame() {
-      gsap.to('#flame-el', { duration: 0.3, scale: 0, opacity: 0 });
-      confetti({ particleCount: 90, spread: 70 });
-      document.getElementById('btn-to-gift').classList.remove('hidden');
+    /* RECIPIENT INTERACTIONS */
+    function triggerCakeWish() {
+      gsap.to('#cake-flame', { duration: 0.3, scale: 0, opacity: 0 });
+      confetti({ particleCount: 100, spread: 80 });
+      document.getElementById('wish-notice').classList.remove('hidden');
+      document.getElementById('cake-next-btn').classList.remove('hidden');
     }
 
-    function openGift() {
-      gsap.to('#gift-el', { 
-        duration: 0.1, 
-        x: "+=12", 
-        yoyo: true, 
-        repeat: 7, 
+    function triggerGiftUnbox() {
+      gsap.to('#gift-box-icon', {
+        duration: 0.1, x: "+=12", yoyo: true, repeat: 7,
         onComplete: () => {
-          document.getElementById('gift-el').innerText = "📦";
-          confetti({ particleCount: 120, spread: 100 });
-          document.getElementById('gift-reveal').classList.remove('hidden');
+          document.getElementById('gift-box-icon').innerText = "📦";
+          confetti({ particleCount: 120, spread: 95 });
+          document.getElementById('gift-unlocked-panel').classList.remove('hidden');
         }
       });
     }
 
-    /* GALLERY CAROUSEL */
-    function updatePhotoDisplay() {
-      if (!galleryPhotos.length) return;
-      const img = document.getElementById('view-photo');
+    function updatePolaroidPhoto() {
+      if (!activePhotosList.length) return;
+      const img = document.getElementById('rec-polaroid-img');
       img.style.opacity = '0';
       setTimeout(() => {
-        img.src = galleryPhotos[photoIdx];
+        img.src = activePhotosList[polaroidIndex];
         img.style.opacity = '1';
-        document.getElementById('photo-counter').innerText = `${photoIdx + 1} / ${galleryPhotos.length}`;
+        document.getElementById('rec-photo-count').innerText = `${polaroidIndex + 1} / ${activePhotosList.length}`;
       }, 150);
     }
 
-    function nextPhoto() {
-      if (!galleryPhotos.length) return;
-      photoIdx = (photoIdx + 1) % galleryPhotos.length;
-      updatePhotoDisplay();
+    function shiftPolaroidPhoto(dir) {
+      if (!activePhotosList.length) return;
+      polaroidIndex = (polaroidIndex + dir + activePhotosList.length) % activePhotosList.length;
+      updatePolaroidPhoto();
     }
 
-    function prevPhoto() {
-      if (!galleryPhotos.length) return;
-      photoIdx = (photoIdx - 1 + galleryPhotos.length) % galleryPhotos.length;
-      updatePhotoDisplay();
-    }
-
-    /* COUNTDOWN TIMER */
-    function startCountdown(targetStr) {
-      if(!targetStr) return;
-      const targetTime = new Date(targetStr).getTime();
+    function startCountdownTimer(dateStr) {
+      if (!dateStr) {
+        document.getElementById('countdown-block').innerHTML = "<p style='color:var(--accent); font-weight:700;'>IT'S YOUR BIRTHDAY! 🎉</p>";
+        return;
+      }
+      const targetTime = new Date(dateStr).getTime();
       setInterval(() => {
-        const now = new Date().getTime();
-        const diff = targetTime - now;
-        if (diff <= 0) return;
-
+        const diff = targetTime - new Date().getTime();
+        if (diff <= 0) {
+          document.getElementById('countdown-block').innerHTML = "<p style='color:var(--accent); font-weight:700;'>IT'S YOUR BIRTHDAY! 🎉</p>";
+          return;
+        }
         document.getElementById('t-d').innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
         document.getElementById('t-h').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
         document.getElementById('t-m').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
@@ -643,36 +785,38 @@
       }, 1000);
     }
 
-    /* INITIALIZATION */
-    window.onload = function() {
-      const params = new URLSearchParams(window.location.search);
-      const dataParam = params.get('data');
+    /* GLOBAL HELPERS */
+    function showLoader(text) {
+      document.getElementById('loader-msg').innerText = text;
+      document.getElementById('app-loader').classList.remove('hidden');
+    }
+    function hideLoader() {
+      document.getElementById('app-loader').classList.add('hidden');
+    }
 
-      if (dataParam) {
-        try {
-          payloadData = JSON.parse(decodeURIComponent(escape(atob(decodeURIComponent(dataParam)))));
-          
-          document.getElementById('scene-creator').classList.remove('active');
-          document.getElementById('scene-1').classList.add('active');
-
-          document.getElementById('view-name').innerText = `Happy Birthday, ${payloadData.n}!`;
-          if (payloadData.a) document.getElementById('view-age').innerText = `Turning ${payloadData.a} Years Young ✨`;
-          document.getElementById('finale-title').innerText = `Happy Birthday, ${payloadData.n}! 🎉`;
-          document.getElementById('finale-msg').innerText = payloadData.m || "May your special day be filled with infinite magic!";
-
-          if (payloadData.p && payloadData.p.length > 0) {
-            galleryPhotos = payloadData.p;
-          } else {
-            galleryPhotos = [
-              "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=400&q=80",
-              "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=400&q=80"
-            ];
+    /* ============================================== */
+    /* ROUTING & INITIALIZATION ON PAGE LOAD         */
+    /* ============================================== */
+    window.onload = async function() {
+      const hash = window.location.hash; // e.g. #/a7K9x2
+      if (hash && hash.includes('/')) {
+        const uniqueId = hash.split('/')[1];
+        if (uniqueId) {
+          showLoader("Loading Cinematic Surprise...");
+          try {
+            const res = await fetch(`${DB_ENDPOINT}/${uniqueId}`);
+            if (!res.ok) throw new Error("Link expired or not found");
+            const data = await res.json();
+            hideLoader();
+            if (data && data.name) {
+              loadRecipientExperience(data);
+              return;
+            }
+          } catch (err) {
+            hideLoader();
+            alert("This birthday link is invalid, expired, or could not be found. Redirecting to creator studio.");
+            window.location.hash = "";
           }
-          updatePhotoDisplay();
-          startCountdown(payloadData.d);
-
-        } catch(e) {
-          console.error("Payload decoding error:", e);
         }
       }
     };
