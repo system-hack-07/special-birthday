@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Cinematic Birthday Experience ✨</title>
+  <title>Cinematic Birthday Celebration ✨</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   
@@ -31,21 +31,6 @@
       --primary: #ffb7b2; --secondary: #b5ead7; --accent: #ffdac1;
       --bg: #2a2438; --card-bg: rgba(255, 183, 178, 0.1);
       --border: rgba(255, 183, 178, 0.25); --text: #fff5f5; --subtext: #e2cbd8;
-    }
-    :root[data-theme="galaxy"] {
-      --primary: #7928ca; --secondary: #4338ca; --accent: #38bdf8;
-      --bg: #030014; --card-bg: rgba(121, 40, 202, 0.08);
-      --border: rgba(121, 40, 202, 0.3); --text: #ffffff; --subtext: #cbd5e1;
-    }
-    :root[data-theme="minimal"] {
-      --primary: #333333; --secondary: #666666; --accent: #111111;
-      --bg: #f4f4f5; --card-bg: rgba(255, 255, 255, 0.85);
-      --border: rgba(0, 0, 0, 0.1); --text: #18181b; --subtext: #71717a;
-    }
-    :root[data-theme="party"] {
-      --primary: #ec4899; --secondary: #8b5cf6; --accent: #fbbf24;
-      --bg: #1e1b4b; --card-bg: rgba(236, 72, 153, 0.1);
-      --border: rgba(236, 72, 153, 0.3); --text: #ffffff; --subtext: #f3e8ff;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; }
@@ -86,8 +71,8 @@
     .btn-main:active { transform: scale(0.96); }
     .btn-row { display: flex; gap: 8px; margin-top: 10px; }
 
-    .theme-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
-    .theme-opt { padding: 10px 6px; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); text-align: center; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .theme-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 15px; }
+    .theme-opt { padding: 10px; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.2); text-align: center; font-size: 0.75rem; font-weight: 700; cursor: pointer; }
     .theme-opt.selected { border-color: var(--primary); background: var(--card-bg); box-shadow: 0 0 10px var(--primary); }
 
     .photo-upload-zone { border: 2px dashed var(--border); border-radius: 14px; padding: 16px; text-align: center; cursor: pointer; background: rgba(0,0,0,0.1); margin-bottom: 10px; }
@@ -95,8 +80,6 @@
     .photo-thumb { position: relative; height: 75px; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
     .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
     .photo-thumb button { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.7); color: #fff; border: none; width: 20px; height: 20px; border-radius: 50%; font-size: 10px; cursor: pointer; }
-
-    .music-widget { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 12px; font-size: 0.8rem; }
 
     .cinematic-box { text-align: center; display: flex; flex-direction: column; justify-content: center; height: 100%; }
     
@@ -142,38 +125,35 @@
     <div id="screen-creator" class="screen active">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
         <h1 style="font-size: 1.4rem;">🎁 Surprise Studio</h1>
-        <div id="preview-toggle-btn" style="font-size:0.75rem; font-weight:700; color:var(--primary); cursor:pointer;" onclick="toggleLivePreviewMode()">Live Preview 👁️</div>
+        <div style="font-size:0.75rem; font-weight:700; color:var(--primary); cursor:pointer;" onclick="toggleLivePreview()">Live Preview 👁️</div>
       </div>
 
       <div class="wizard-steps">
         <div class="w-step active" id="ws-1"></div>
         <div class="w-step" id="ws-2"></div>
         <div class="w-step" id="ws-3"></div>
-        <div class="w-step" id="ws-4"></div>
       </div>
 
       <div class="screen-content">
         <div class="w-panel" id="panel-1">
           <h2 class="title-main" style="font-size: 1.3rem;">Birthday Profile</h2>
-          <p class="subtitle">Who is this cinematic surprise dedicated to?</p>
+          <p class="subtitle">Enter the celebration details for your recipient.</p>
 
-          <div class="form-group"><label>Recipient Full Name *</label><input type="text" id="c-name" placeholder="e.g. Aarav Sharma"></div>
-          <div class="form-group"><label>Cute Nickname / Title</label><input type="text" id="c-nickname" placeholder="e.g. Bestie / Rockstar / My Love"></div>
-          <div class="form-group"><label>Turning Age</label><input type="number" id="c-age" placeholder="e.g. 22"></div>
-          <div class="form-group"><label>Birthday Target Date & Time</label><input type="datetime-local" id="c-date"></div>
-          <div class="form-group"><label>Sender / Creator Name *</label><input type="text" id="c-sender" placeholder="e.g. Priya"></div>
-          <div class="form-group"><label>Heartfelt Letter / Message</label><textarea id="c-msg" rows="3" placeholder="Write your personalized emotional wish here..."></textarea></div>
+          <div class="form-group"><label>Recipient Name *</label><input type="text" id="c-name" placeholder="e.g. Aarav"></div>
+          <div class="form-group"><label>Turning Age</label><input type="number" id="c-age" placeholder="e.g. 21"></div>
+          <div class="form-group"><label>Sender Name *</label><input type="text" id="c-sender" placeholder="e.g. Priya"></div>
+          <div class="form-group"><label>Heartfelt Message</label><textarea id="c-msg" rows="3" placeholder="Write your birthday wish..."></textarea></div>
           
           <button class="btn-main" onclick="setWizardStep(2)">Next: Photos 📸</button>
         </div>
 
         <div class="w-panel hidden" id="panel-2">
-          <h2 class="title-main" style="font-size: 1.3rem;">Memory Gallery</h2>
-          <p class="subtitle">Upload photos for the cinematic polaroid reel.</p>
+          <h2 class="title-main" style="font-size: 1.3rem;">Memory Reel</h2>
+          <p class="subtitle">Upload photos for the polaroid presentation.</p>
 
           <div class="photo-upload-zone" onclick="document.getElementById('file-selector').click()">
             <div style="font-size: 1.8rem; margin-bottom: 4px;">📂</div>
-            <p style="font-size: 0.8rem; font-weight: 700;">Tap to select photos (Max 10)</p>
+            <p style="font-size: 0.8rem; font-weight: 700;">Tap to select photos</p>
             <input type="file" id="file-selector" multiple accept="image/*" class="hidden" onchange="handlePhotoUploads(event)">
           </div>
 
@@ -186,55 +166,33 @@
         </div>
 
         <div class="w-panel hidden" id="panel-3">
-          <h2 class="title-main" style="font-size: 1.3rem;">Theme & Vibe</h2>
-          <p class="subtitle">Select your aesthetic style and atmospheric music.</p>
+          <h2 class="title-main" style="font-size: 1.3rem;">Theme Vibe</h2>
+          <p class="subtitle">Choose an aesthetic visual theme.</p>
 
-          <label style="font-size: 0.7rem; font-weight: 700; color: var(--subtext); margin-bottom: 6px; display:block;">VISUAL THEME</label>
           <div class="theme-grid">
             <div class="theme-opt selected" onclick="selectTheme('dark', this)">Dark Cosmic</div>
             <div class="theme-opt" onclick="selectTheme('luxury', this)">Luxury Gold</div>
             <div class="theme-opt" onclick="selectTheme('neon', this)">Cyber Neon</div>
             <div class="theme-opt" onclick="selectTheme('pastel', this)">Soft Pastel</div>
-            <div class="theme-opt" onclick="selectTheme('galaxy', this)">Deep Galaxy</div>
-            <div class="theme-opt" onclick="selectTheme('party', this)">Party Pop</div>
           </div>
 
-          <div class="form-group">
-            <label>Background Atmosphere Track</label>
-            <select id="c-music" onchange="previewCreatorMusic()">
-              <option value="none">✨ None / Pure Silence</option>
-              <option value="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-to-you-559.mp3">🎂 Happy Birthday Instrumental</option>
-              <option value="https://assets.mixkit.co/music/preview/mixkit-magical-suspense-196.mp3">🌌 Magical Cinematic Ambient</option>
-              <option value="https://assets.mixkit.co/music/preview/mixkit-uplifting-flute-2216.mp3">🌸 Uplifting Celebration Beat</option>
-            </select>
-          </div>
-
-          <div class="music-widget">
-            <span id="music-status-txt">Audio: Stopped</span>
-            <button class="g-btn" onclick="toggleCreatorAudio()" id="music-toggle-btn">Play Preview 🎵</button>
-          </div>
-
-          <div class="btn-row">
+          <div style="margin-top: 20px;">
+            <button class="btn-main" onclick="publishBirthdayPage()">🚀 Publish Surprise Link</button>
             <button class="btn-main" style="background:rgba(255,255,255,0.1);" onclick="setWizardStep(2)">Back</button>
-            <button class="btn-main" onclick="publishBirthdayPage()">🚀 Publish Surprise</button>
           </div>
         </div>
 
-        <div class="w-panel hidden" id="panel-4">
+        <div class="w-panel hidden" id="panel-publish">
           <div style="text-align:center; padding: 10px 0;">
-            <div style="font-size: 3.5rem; margin-bottom: 8px;">🎉</div>
-            <h2 class="title-main" style="font-size: 1.5rem;">Ready to Share!</h2>
-            <p class="subtitle">Your unique cinematic surprise link has been successfully generated.</p>
-
-            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:12px; border:1px solid var(--border); margin-bottom:12px;">
+            <div style="font-size: 3rem; margin-bottom: 8px;">🎉</div>
+            <h2 class="title-main" style="font-size: 1.4rem;">Link Ready!</h2>
+            <div style="background:rgba(0,0,0,0.3); padding:10px; border-radius:12px; border:1px solid var(--border); margin:12px 0;">
               <p style="font-size:0.75rem; color:var(--accent); word-break:break-all;" id="final-share-url"></p>
             </div>
-
-            <div id="qrcode-container" style="display:flex; justify-content:center; margin:12px 0;"></div>
-
-            <button class="btn-main" onclick="copyFinalLink()">📋 Copy Share Link</button>
-            <button class="btn-main" style="background:linear-gradient(135deg, #25D366, #128C7E);" onclick="shareOnWhatsApp()">💬 Share on WhatsApp</button>
-            <button class="btn-main" style="background:rgba(255,255,255,0.1);" onclick="resetCreatorStudio()">✨ Create Another Surprise</button>
+            <div id="qrcode-container" style="display:flex; justify-content:center; margin:10px 0;"></div>
+            <button class="btn-main" onclick="copyFinalLink()">📋 Copy Link</button>
+            <button class="btn-main" style="background:linear-gradient(135deg, #25D366, #128C7E);" onclick="shareWhatsApp()">💬 WhatsApp</button>
+            <button class="btn-main" style="background:rgba(255,255,255,0.1);" onclick="resetStudio()">Create Another</button>
           </div>
         </div>
       </div>
@@ -243,85 +201,67 @@
     <!-- RECIPIENT SCREENS -->
     <div id="scene-0" class="screen">
       <div class="cinematic-box">
-        <div style="font-size: 5rem; margin-bottom: 12px; filter: drop-shadow(0 0 25px var(--primary));">💌</div>
-        <span class="badge-tag" id="rec-sender-tag">Someone Special</span>
-        <h1 class="title-main" style="font-size: 2rem;">A Surprise Is Waiting</h1>
-        <p class="subtitle">A cinematic birthday journey has been custom-crafted for you.</p>
-        <button class="btn-main" onclick="advanceRecipientScene(1)">OPEN YOUR SURPRISE 🎁</button>
+        <div style="font-size: 5rem; margin-bottom: 12px;">💌</div>
+        <span class="badge-tag" id="rec-sender-tag">Special Delivery</span>
+        <h1 class="title-main" style="font-size: 2rem;">A Surprise Awaits</h1>
+        <p class="subtitle">An interactive birthday experience has been prepared for you.</p>
+        <button class="btn-main" onclick="advanceScene(1)">OPEN SURPRISE 🎁</button>
       </div>
     </div>
 
     <div id="scene-1" class="screen">
       <div class="cinematic-box">
-        <span class="badge-tag">Celebrating You</span>
-        <h1 class="title-main" id="rec-title-name" style="font-size: 2.3rem;">Happy Birthday!</h1>
+        <span class="badge-tag">Happy Birthday</span>
+        <h1 class="title-main" id="rec-title-name" style="font-size: 2.3rem;">Cheers!</h1>
         <p class="subtitle" id="rec-age-subtitle"></p>
-
-        <div class="timer-row" id="countdown-block">
-          <div class="t-box"><div class="t-val" id="t-d">00</div><div class="t-lbl">Days</div></div>
-          <div class="t-box"><div class="t-val" id="t-h">00</div><div class="t-lbl">Hours</div></div>
-          <div class="t-box"><div class="t-val" id="t-m">00</div><div class="t-lbl">Mins</div></div>
-          <div class="t-box"><div class="t-val" id="t-s">00</div><div class="t-lbl">Secs</div></div>
-        </div>
-
-        <button class="btn-main" onclick="advanceRecipientScene(2)" style="margin-top: 15px;">Make a Wish 🎂</button>
+        <button class="btn-main" onclick="advanceScene(2)">Make a Wish 🎂</button>
       </div>
     </div>
 
     <div id="scene-2" class="screen">
       <div class="cinematic-box">
         <h2 class="title-main" style="font-size: 1.8rem;">Blow Out Candles</h2>
-        <p class="subtitle">Tap the glowing flame to make your birthday wish!</p>
-        
-        <div class="cake-stage" onclick="triggerCakeWish()">
+        <p class="subtitle">Tap the flame to make your wish.</p>
+        <div class="cake-stage" onclick="triggerWish()">
           <span class="flame-el" id="cake-flame">🔥</span>
           <span class="cake-base">🎂</span>
         </div>
-
-        <div id="wish-notice" class="hidden" style="color:var(--accent); font-weight:800; font-size:1.1rem; margin-bottom:10px;">✨ Make a Wish! ✨</div>
-        <button id="cake-next-btn" class="btn-main hidden" onclick="advanceRecipientScene(3)">Open Gift Box 🎁</button>
+        <button id="cake-next-btn" class="btn-main hidden" onclick="advanceScene(3)">Open Gift Box 🎁</button>
       </div>
     </div>
 
     <div id="scene-3" class="screen">
       <div class="cinematic-box">
-        <h2 class="title-main" style="font-size: 1.8rem;">Surprise Gift Box</h2>
-        <p class="subtitle">Tap your gift package to unwrap it!</p>
-
-        <div class="gift-box-el" id="gift-box-icon" onclick="triggerGiftUnbox()">🎁</div>
-
-        <div id="gift-unlocked-panel" class="hidden">
-          <p style="color:var(--accent); font-weight:800; margin-bottom:12px;">✨ Gift Unlocked Successfully! ✨</p>
-          <button class="btn-main" onclick="advanceRecipientScene(4)">Read Personal Letter 💌</button>
+        <h2 class="title-main" style="font-size: 1.8rem;">Unwrap Gift</h2>
+        <p class="subtitle">Tap your box to unlock memories.</p>
+        <div class="gift-box-el" onclick="triggerUnbox()">🎁</div>
+        <div id="gift-panel" class="hidden">
+          <button class="btn-main" onclick="advanceScene(4)">View Memories 📸</button>
         </div>
       </div>
     </div>
 
     <div id="scene-4" class="screen">
       <div class="cinematic-box" style="justify-content: flex-start; padding-top: 10px;">
-        <h2 class="title-main" style="font-size: 1.5rem; margin-bottom: 4px;">Memories & Wishes</h2>
-
+        <h2 class="title-main" style="font-size: 1.4rem;">Memories & Message</h2>
         <div class="polaroid-card">
           <img id="rec-polaroid-img" src="" alt="Memory">
           <div class="gallery-nav">
-            <button class="g-btn" onclick="shiftPolaroidPhoto(-1)">◀ Prev</button>
+            <button class="g-btn" onclick="shiftPhoto(-1)">◀ Prev</button>
             <span id="rec-photo-count" style="font-size:0.7rem; font-weight:700; color:#333;">1 / 1</span>
-            <button class="g-btn" onclick="shiftPolaroidPhoto(1)">Next ▶</button>
+            <button class="g-btn" onclick="shiftPhoto(1)">Next ▶</button>
           </div>
         </div>
-
-        <div class="letter-paper" id="rec-typewriter-text"></div>
-
-        <button class="btn-main" onclick="advanceRecipientScene(5)" style="margin-top: 5px;">Grand Finale 🎉</button>
+        <div class="letter-paper" id="rec-letter"></div>
+        <button class="btn-main" onclick="advanceScene(5)">Finale 🎉</button>
       </div>
     </div>
 
     <div id="scene-5" class="screen">
       <div class="cinematic-box">
         <h1 class="title-main" id="rec-finale-title" style="font-size: 2.2rem;">Happy Birthday!</h1>
-        <p class="subtitle" id="rec-finale-sub">Wishing you a spectacular year ahead filled with love and success.</p>
-        <div style="font-size: 3.5rem; margin: 15px 0; animation: bounce 1.5s infinite alternate;">🥳🎉✨</div>
-        <button class="btn-main" onclick="exitToCreatorStudio()">Create Your Own Surprise ✨</button>
+        <p class="subtitle" id="rec-finale-sub">Wishing you a year ahead full of prosperity.</p>
+        <button class="btn-main" onclick="location.hash=''; location.reload();">Create Your Own ✨</button>
       </div>
     </div>
 
@@ -329,463 +269,198 @@
 
   <script>
     const DB_ENDPOINT = "https://json.extendsclass.com/bin";
+    let state = { name: "", age: "", sender: "", msg: "", photos: [], theme: "dark" };
+    let photosList = [], photoIdx = 0;
 
-    let creatorState = {
-      name: "", nickname: "", age: "", date: "", sender: "", msg: "",
-      photos: [], theme: "dark", music: "none"
-    };
-
-    let activePhotosList = [];
-    let polaroidIndex = 0;
-    let currentWizardStep = 1;
-    let recipientCurrentScene = 0;
-    let previewModeActive = false;
-    let audioContextPlayer = null;
-
-    /* 60FPS BACKGROUND ANIMATION ENGINE */
+    // Background particle engine
     const canvas = document.getElementById('fx-canvas');
     const ctx = canvas.getContext('2d');
-    let particles = [];
-    let balloons = [];
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    let pts = [];
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resize); resize();
+    
+    for(let i=0; i<30; i++) pts.push({ x: Math.random()*canvas.width, y: Math.random()*canvas.height, s: Math.random()*2+0.5, sp: Math.random()*0.3+0.1 });
+    function loop() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = 'rgba(255,215,0,0.5)';
+      pts.forEach(p => { p.y -= p.sp; if(p.y<0) p.y=canvas.height; ctx.fillRect(p.x, p.y, p.s, p.s); });
+      requestAnimationFrame(loop);
     }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    loop();
 
-    class Particle {
-      constructor() { this.reset(); }
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2.2 + 0.5;
-        this.speedY = Math.random() * 0.3 + 0.1;
-        this.alpha = Math.random() * 0.7 + 0.2;
-      }
-      update() {
-        this.y -= this.speedY;
-        if (this.y < 0) this.reset();
-      }
-      draw() {
-        ctx.fillStyle = `rgba(255, 215, 0, ${this.alpha})`;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    class Balloon {
-      constructor() { this.reset(); }
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = canvas.height + 40;
-        this.radius = Math.random() * 10 + 8;
-        this.speed = Math.random() * 0.6 + 0.2;
-        this.color = ['#ff2e93', '#8a2be2', '#ffd700', '#38bdf8', '#ec4899'][Math.floor(Math.random() * 5)];
-      }
-      update() {
-        this.y -= this.speed;
-        if (this.y < -40) this.reset();
-      }
-      draw() {
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    for (let i = 0; i < 35; i++) particles.push(new Particle());
-    for (let i = 0; i < 8; i++) balloons.push(new Balloon());
-
-    function renderLoop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => { p.update(); p.draw(); });
-      balloons.forEach(b => { b.update(); b.draw(); });
-      requestAnimationFrame(renderLoop);
-    }
-    renderLoop();
-
-    /* CREATOR STUDIO WIZARD */
-    function setWizardStep(step) {
-      if (step === 2) {
-        const name = document.getElementById('c-name').value.trim();
-        const sender = document.getElementById('c-sender').value.trim();
-        if (!name || !sender) {
-          alert("Please enter both Recipient Name and Sender Name.");
-          return;
-        }
-      }
-      
-      currentWizardStep = step;
+    function setWizardStep(s) {
+      if (s === 2 && !document.getElementById('c-name').value.trim()) return alert("Please enter a recipient name.");
       document.querySelectorAll('.w-panel').forEach(p => p.classList.add('hidden'));
-      document.getElementById(`panel-${step}`).classList.remove('hidden');
-
-      for (let i = 1; i <= 4; i++) {
-        const bar = document.getElementById(`ws-${i}`);
-        if (i <= step) bar.classList.add('active');
-        else bar.classList.remove('active');
-      }
+      document.getElementById(s === 4 ? 'panel-publish' : `panel-${s}`).classList.remove('hidden');
+      for(let i=1; i<=3; i++) document.getElementById(`ws-${i}`).classList.toggle('active', i<=s);
     }
 
-    function selectTheme(themeName, el) {
+    function selectTheme(t, el) {
       document.querySelectorAll('.theme-opt').forEach(o => o.classList.remove('selected'));
       el.classList.add('selected');
-      creatorState.theme = themeName;
-      document.documentElement.setAttribute('data-theme', themeName);
+      state.theme = t;
+      document.documentElement.setAttribute('data-theme', t);
     }
 
     async function handlePhotoUploads(e) {
-      const files = Array.from(e.target.files).slice(0, 10);
-      showLoader("Compressing & Optimizing Photos...");
-
-      for (let file of files) {
-        const optimizedBase64 = await resizeAndCompressImage(file);
-        activePhotosList.push(optimizedBase64);
+      const files = Array.from(e.target.files).slice(0, 6);
+      showLoader("Compressing Images...");
+      for(let file of files) {
+        photosList.push(await resizeImage(file));
       }
-
       hideLoader();
-      renderPhotoPreviews();
+      renderPreviews();
     }
 
-    function resizeAndCompressImage(file) {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (event) => {
+    function resizeImage(file) {
+      return new Promise(res => {
+        const r = new FileReader();
+        r.onload = ev => {
           const img = new Image();
           img.onload = () => {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            let w = img.width, h = img.height;
-            const maxDim = 800;
-            if (w > h) { if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; } }
-            else { if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; } }
-            canvas.width = w; canvas.height = h;
-            ctx.drawImage(img, 0, 0, w, h);
-            resolve(canvas.toDataURL('image/jpeg', 0.75));
+            const c = document.createElement('canvas');
+            c.width = 400; c.height = 400 * (img.height/img.width);
+            c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+            res(c.toDataURL('jpeg', 0.7));
           };
-          img.src = event.target.result;
+          img.src = ev.target.result;
         };
-        reader.readAsDataURL(file);
+        r.readAsDataURL(file);
       });
     }
 
-    function renderPhotoPreviews() {
-      const container = document.getElementById('photo-preview-container');
-      container.innerHTML = "";
-      activePhotosList.forEach((src, idx) => {
-        const thumb = document.createElement('div');
-        thumb.className = 'photo-thumb';
-        thumb.innerHTML = `<img src="${src}"><button onclick="removePhoto(${idx})">✕</button>`;
-        container.appendChild(thumb);
-      });
+    function renderPreviews() {
+      const cont = document.getElementById('photo-preview-container');
+      cont.innerHTML = photosList.map((src, i) => `<div class="photo-thumb"><img src="${src}"><button onclick="photosList.splice(${i},1);renderPreviews()">✕</button></div>`).join('');
     }
 
-    function removePhoto(idx) {
-      activePhotosList.splice(idx, 1);
-      renderPhotoPreviews();
-    }
-
-    function previewCreatorMusic() {
-      const trackUrl = document.getElementById('c-music').value;
-      creatorState.music = trackUrl;
-      if (audioContextPlayer) { audioContextPlayer.pause(); audioContextPlayer = null; }
-      document.getElementById('music-status-txt').innerText = "Audio: Ready";
-    }
-
-    function toggleCreatorAudio() {
-      const trackUrl = document.getElementById('c-music').value;
-      if (trackUrl === 'none') return alert("Please select a valid background track first.");
-
-      if (!audioContextPlayer) {
-        audioContextPlayer = new Audio(trackUrl);
-        audioContextPlayer.loop = true;
-        audioContextPlayer.play().then(() => {
-          document.getElementById('music-status-txt').innerText = "Audio: Playing 🎵";
-          document.getElementById('music-toggle-btn').innerText = "Pause ⏸";
-        }).catch(() => {
-          alert("Browser blocked autoplay. Tap play again.");
-        });
-      } else {
-        if (!audioContextPlayer.paused) {
-          audioContextPlayer.pause();
-          document.getElementById('music-status-txt').innerText = "Audio: Paused";
-          document.getElementById('music-toggle-btn').innerText = "Play Preview 🎵";
-        } else {
-          audioContextPlayer.play();
-          document.getElementById('music-status-txt').innerText = "Audio: Playing 🎵";
-          document.getElementById('music-toggle-btn').innerText = "Pause ⏸";
-        }
-      }
-    }
-
-    /* PUBLISHING WITH BACKUP LOCAL CACHE */
     async function publishBirthdayPage() {
-      showLoader("Publishing Surprise to Cloud Database...");
-
-      creatorState.name = document.getElementById('c-name').value.trim();
-      creatorState.nickname = document.getElementById('c-nickname').value.trim();
-      creatorState.age = document.getElementById('c-age').value.trim();
-      creatorState.date = document.getElementById('c-date').value.trim();
-      creatorState.sender = document.getElementById('c-sender').value.trim();
-      creatorState.msg = document.getElementById('c-msg').value.trim();
-      creatorState.photos = activePhotosList.length > 0 ? activePhotosList : [
-        "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80",
-        "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=600&q=80"
-      ];
+      showLoader("Publishing Surprise...");
+      state.name = document.getElementById('c-name').value;
+      state.age = document.getElementById('c-age').value;
+      state.sender = document.getElementById('c-sender').value || "A Friend";
+      state.msg = document.getElementById('c-msg').value || "Wishing you a wonderful day!";
+      state.photos = photosList.length ? photosList : ["https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80"];
 
       try {
-        const response = await fetch(DB_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(creatorState)
-        });
-        const result = await response.json();
-        const uniqueId = result.id; 
-
-        // Cache state locally so it can always be retrieved securely even if network blocks
-        localStorage.setItem(`bday_${uniqueId}`, JSON.stringify(creatorState));
-
-        hideLoader();
-
-        const generatedShareUrl = `${window.location.origin}${window.location.pathname}#/${uniqueId}`;
-        document.getElementById('final-share-url').innerText = generatedShareUrl;
+        const res = await fetch(DB_ENDPOINT, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(state) });
+        const json = await res.json();
+        const link = `${window.location.origin}${window.location.pathname}#/${json.id}`;
+        localStorage.setItem(`bday_${json.id}`, JSON.stringify(state));
         
-        const qrBox = document.getElementById('qrcode-container');
-        qrBox.innerHTML = "";
-        new QRCode(qrBox, { text: generatedShareUrl, width: 110, height: 110 });
-
-        setWizardStep(4);
-      } catch (err) {
         hideLoader();
-        alert("Network publishing failed. Please try again.");
+        document.getElementById('final-share-url').innerText = link;
+        document.getElementById('qrcode-container').innerHTML = "";
+        new QRCode(document.getElementById('qrcode-container'), { text: link, width: 100, height: 100 });
+        setWizardStep(4);
+      } catch(e) {
+        hideLoader();
+        alert("Publishing error. Try again.");
       }
     }
 
     function copyFinalLink() {
       navigator.clipboard.writeText(document.getElementById('final-share-url').innerText);
-      alert("Surprise link copied to clipboard!");
+      alert("Link copied!");
     }
 
-    function shareOnWhatsApp() {
-      const url = document.getElementById('final-share-url').innerText;
-      const text = encodeURIComponent(`You have a special cinematic birthday surprise waiting for you! Open it here: ${url}`);
-      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    function shareWhatsApp() {
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent("Open your birthday surprise: " + document.getElementById('final-share-url').innerText)}`, '_blank');
     }
 
-    function resetCreatorStudio() {
-      if (audioContextPlayer) { audioContextPlayer.pause(); audioContextPlayer = null; }
-      activePhotosList = [];
-      renderPhotoPreviews();
-      document.getElementById('c-name').value = "";
-      document.getElementById('c-sender').value = "";
-      document.getElementById('c-msg').value = "";
-      setWizardStep(1);
-      window.location.hash = "";
+    function resetStudio() {
+      location.hash = ''; location.reload();
     }
 
-    function toggleLivePreviewMode() {
-      const name = document.getElementById('c-name').value.trim() || "Aarav Sharma";
-      const sender = document.getElementById('c-sender').value.trim() || "Priya";
-      const msg = document.getElementById('c-msg').value.trim() || "Wishing you an extraordinary year ahead filled with joy and success!";
-      
-      const previewPayload = {
-        name, nickname: document.getElementById('c-nickname').value.trim() || "Bestie",
-        age: document.getElementById('c-age').value.trim() || "22",
-        date: document.getElementById('c-date').value.trim(),
-        sender, msg,
-        photos: activePhotosList.length > 0 ? activePhotosList : [
-          "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80"
-        ],
-        theme: creatorState.theme,
-        music: document.getElementById('c-music').value
-      };
-
-      previewModeActive = true;
-      loadRecipientExperience(previewPayload);
+    function toggleLivePreview() {
+      loadExperience({
+        name: document.getElementById('c-name').value || "Aarav",
+        age: document.getElementById('c-age').value || "21",
+        sender: document.getElementById('c-sender').value || "Priya",
+        msg: document.getElementById('c-msg').value || "Wishing you an amazing year ahead!",
+        photos: photosList.length ? photosList : ["https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80"],
+        theme: state.theme
+      });
     }
 
-    function exitToCreatorStudio() {
-      if (audioContextPlayer) { audioContextPlayer.pause(); audioContextPlayer = null; }
-      previewModeActive = false;
-      window.location.hash = "";
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById('screen-creator').classList.add('active');
-    }
-
-    let loadedRecipientData = null;
-
-    async function loadRecipientExperience(data) {
-      loadedRecipientData = data;
+    function loadExperience(data) {
       document.documentElement.setAttribute('data-theme', data.theme || 'dark');
-
-      document.getElementById('rec-sender-tag').innerText = `Prepared by ${data.sender}`;
+      document.getElementById('rec-sender-tag').innerText = `From ${data.sender}`;
       document.getElementById('rec-title-name').innerText = `Happy Birthday, ${data.name}!`;
-      document.getElementById('rec-age-subtitle').innerText = data.age ? `Turning ${data.age} Years Young ✨` : "";
+      document.getElementById('rec-age-subtitle').innerText = data.age ? `Turning ${data.age} Years ✨` : "";
       document.getElementById('rec-finale-title').innerText = `Happy Birthday, ${data.name}! 🎉`;
       document.getElementById('rec-finale-sub').innerText = data.msg;
-
-      activePhotosList = data.photos || [];
-      polaroidIndex = 0;
-      updatePolaroidPhoto();
-      startCountdownTimer(data.date);
-
-      if (data.music && data.music !== 'none' && !audioContextPlayer) {
-        audioContextPlayer = new Audio(data.music);
-        audioContextPlayer.loop = true;
-        audioContextPlayer.play().catch(() => {});
-      }
+      photosList = data.photos;
+      updatePhoto();
 
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById('scene-0').classList.add('active');
     }
 
-    function advanceRecipientScene(targetSceneIdx) {
-      const currentEl = document.querySelector('.screen.active');
-      const targetEl = document.getElementById(`scene-${targetSceneIdx}`);
-
-      gsap.to(currentEl, {
-        duration: 0.35, opacity: 0, scale: 0.85, y: -20,
-        onComplete: () => {
-          currentEl.classList.remove('active');
-          targetEl.classList.add('active');
-          gsap.fromTo(targetEl, { opacity: 0, scale: 1.1, y: 25 }, { duration: 0.45, opacity: 1, scale: 1, y: 0, ease: "back.out(1.2)" });
-          recipientCurrentScene = targetSceneIdx;
-          onRecipientSceneEnter(targetSceneIdx);
-        }
-      });
-    }
-
-    function onRecipientSceneEnter(sceneIdx) {
-      if (sceneIdx === 1) {
-        confetti({ particleCount: 70, spread: 70, origin: { y: 0.6 } });
-      }
-      if (sceneIdx === 4) {
-        let msg = loadedRecipientData?.msg || "Wishing you a magical day filled with infinite joy and light!";
-        let charIdx = 0;
-        document.getElementById('rec-typewriter-text').innerText = "";
-        function runTypewriter() {
-          if (charIdx < msg.length) {
-            document.getElementById('rec-typewriter-text').innerText += msg.charAt(charIdx);
-            charIdx++;
-            setTimeout(runTypewriter, 35);
-          }
-        }
-        runTypewriter();
-      }
-      if (sceneIdx === 5) {
-        let count = 0;
-        let interval = setInterval(() => {
-          confetti({ particleCount: 50, spread: 90, origin: { y: 0.5 } });
-          count++;
-          if (count > 4) clearInterval(interval);
-        }, 1200);
+    function advanceScene(idx) {
+      const curr = document.querySelector('.screen.active');
+      const next = document.getElementById(`scene-${idx}`);
+      curr.classList.remove('active');
+      next.classList.add('active');
+      if(idx === 1 || idx === 5) confetti({ particleCount: 70, spread: 70 });
+      if(idx === 4) {
+        let i = 0, m = document.getElementById('rec-finale-sub').innerText;
+        document.getElementById('rec-letter').innerText = "";
+        (function type() { if(i<m.length) { document.getElementById('rec-letter').innerText += m[i++]; setTimeout(type, 35); } })();
       }
     }
 
-    function triggerCakeWish() {
-      gsap.to('#cake-flame', { duration: 0.3, scale: 0, opacity: 0 });
-      confetti({ particleCount: 100, spread: 80 });
-      document.getElementById('wish-notice').classList.remove('hidden');
+    function triggerWish() {
+      gsap.to('#cake-flame', { scale: 0, opacity: 0 });
+      confetti({ particleCount: 100 });
       document.getElementById('cake-next-btn').classList.remove('hidden');
     }
 
-    function triggerGiftUnbox() {
-      gsap.to('#gift-box-icon', {
-        duration: 0.1, x: "+=12", yoyo: true, repeat: 7,
-        onComplete: () => {
-          document.getElementById('gift-box-icon').innerText = "📦";
-          confetti({ particleCount: 120, spread: 95 });
-          document.getElementById('gift-unlocked-panel').classList.remove('hidden');
-        }
-      });
+    function triggerUnbox() {
+      confetti({ particleCount: 80 });
+      document.getElementById('gift-panel').classList.remove('hidden');
     }
 
-    function updatePolaroidPhoto() {
-      if (!activePhotosList.length) return;
-      const img = document.getElementById('rec-polaroid-img');
-      img.style.opacity = '0';
-      setTimeout(() => {
-        img.src = activePhotosList[polaroidIndex];
-        img.style.opacity = '1';
-        document.getElementById('rec-photo-count').innerText = `${polaroidIndex + 1} / ${activePhotosList.length}`;
-      }, 150);
+    function updatePhoto() {
+      if(!photosList.length) return;
+      document.getElementById('rec-polaroid-img').src = photosList[photoIdx];
+      document.getElementById('rec-photo-count').innerText = `${photoIdx + 1} / ${photosList.length}`;
     }
 
-    function shiftPolaroidPhoto(dir) {
-      if (!activePhotosList.length) return;
-      polaroidIndex = (polaroidIndex + dir + activePhotosList.length) % activePhotosList.length;
-      updatePolaroidPhoto();
+    function shiftPhoto(d) {
+      photoIdx = (photoIdx + d + photosList.length) % photosList.length;
+      updatePhoto();
     }
 
-    function startCountdownTimer(dateStr) {
-      if (!dateStr) {
-        document.getElementById('countdown-block').innerHTML = "<p style='color:var(--accent); font-weight:700;'>IT'S YOUR BIRTHDAY! 🎉</p>";
-        return;
-      }
-      const targetTime = new Date(dateStr).getTime();
-      setInterval(() => {
-        const diff = targetTime - new Date().getTime();
-        if (diff <= 0) {
-          document.getElementById('countdown-block').innerHTML = "<p style='color:var(--accent); font-weight:700;'>IT'S YOUR BIRTHDAY! 🎉</p>";
-          return;
-        }
-        document.getElementById('t-d').innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-        document.getElementById('t-h').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-        document.getElementById('t-m').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-        document.getElementById('t-s').innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
-      }, 1000);
-    }
-
-    function showLoader(text) {
-      document.getElementById('loader-msg').innerText = text;
+    function showLoader(txt) {
+      document.getElementById('loader-msg').innerText = txt;
       document.getElementById('app-loader').classList.remove('hidden');
     }
-    function hideLoader() {
-      document.getElementById('app-loader').classList.add('hidden');
-    }
+    function hideLoader() { document.getElementById('app-loader').classList.add('hidden'); }
 
-    /* BULLETPROOF ROUTING & ERROR RECOVERY */
-    window.onload = async function() {
-      const hash = window.location.hash.trim(); // e.g. #/a7K9x2 or #/undefined
-      
+    // Bulletproof hash router check (handles empty routes or `#/undefined` safely)
+    window.onload = async () => {
+      const hash = window.location.hash.trim();
       if (hash && hash.includes('/')) {
-        const uniqueId = hash.split('/')[1];
-        
-        // Handle malformed or undefined parameters explicitly
-        if (!uniqueId || uniqueId === 'undefined' || uniqueId === 'null') {
-          window.location.hash = "";
+        const id = hash.split('/')[1];
+        if (!id || id === 'undefined' || id === 'null') {
+          window.location.hash = '';
           return;
         }
-
-        showLoader("Loading Cinematic Surprise...");
+        showLoader("Loading Surprise...");
         try {
-          let data = null;
-          
-          // First check local backup store to instantly load if available
-          const localBackup = localStorage.getItem(`bday_${uniqueId}`);
-          if (localBackup) {
-            data = JSON.parse(localBackup);
-          } else {
-            // Otherwise, fetch from cloud database API endpoint
-            const res = await fetch(`${DB_ENDPOINT}/${uniqueId}`);
-            if (!res.ok) throw new Error("Link not found");
+          let data = JSON.parse(localStorage.getItem(`bday_${id}`) || 'null');
+          if (!data) {
+            const res = await fetch(`${DB_ENDPOINT}/${id}`);
+            if (!res.ok) throw new Error();
             data = await res.json();
           }
-
           hideLoader();
-          if (data && data.name) {
-            loadRecipientExperience(data);
-            return;
-          } else {
-            throw new Error("Invalid record format");
-          }
-        } catch (err) {
+          if (data && data.name) { loadExperience(data); return; }
+        } catch(e) {
           hideLoader();
-          alert("This birthday link is invalid, expired, or was removed. Redirecting to the Creator Studio.");
-          window.location.hash = "";
+          alert("Link expired or invalid. Opening Creator Studio.");
+          window.location.hash = '';
         }
       }
     };
