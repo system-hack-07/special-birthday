@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Birthday Wish Website Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-pink: #fff0f5;
+      --card-bg: rgba(255, 255, 255, 0.96);
+      --card-border: #fcd5e5;
+      --primary-pink: #e60067;
+      --gradient-btn: linear-gradient(135deg, #ff3b8d 0%, #e60067 100%);
+      --text-heading: #590022;
+      --text-body: #4a4a4a;
+      --input-border: #f8b4d0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      background-color: var(--bg-pink);
+      background-image: 
+        radial-gradient(#ffb6c1 1.5px, transparent 1.5px),
+        radial-gradient(#ffccd5 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+      color: var(--text-body);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 12px 10px calc(20px + env(safe-area-inset-bottom));
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .decor-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(50px);
+      opacity: 0.45;
+      z-index: 0;
+      animation: floatOrb 6s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    .orb-1 { width: 160px; height: 160px; background: #ff9a9e; top: -30px; left: -30px; }
+    .orb-2 { width: 180px; height: 180px; background: #fecfef; bottom: -40px; right: -40px; animation-delay: -3s; }
+
+    @keyframes floatOrb {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(15px) scale(1.05); }
+    }
+
+    .container { width: 100%; max-width: 400px; z-index: 1; }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1.5px solid var(--card-border);
+      border-radius: 20px;
+      padding: 18px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 10px 24px rgba(230, 0, 103, 0.06);
+      position: relative;
+    }
+
+    .badge-tag {
+      display: inline-block;
+      background: #ffe6ef;
+      color: var(--primary-pink);
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-family: 'Fredoka', cursive;
+      color: var(--text-heading);
+      font-size: 1.65rem;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    p.description {
+      font-size: 0.85rem; line-height: 1.4; color: #666; margin-bottom: 16px; font-weight: 500;
+    }
+
+    .form-group { margin-bottom: 14px; }
+    label { display: block; font-weight: 700; color: var(--text-heading); font-size: 0.85rem; margin-bottom: 6px; }
+
+    input[type="text"], input[type="date"], textarea {
+      width: 100%; padding: 12px 14px; border-radius: 14px;
+      border: 1.5px solid var(--input-border); background: #ffffff;
+      font-size: 0.92rem; font-weight: 700; color: var(--text-heading); outline: none; transition: all 0.2s ease;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--primary-pink);
+      box-shadow: 0 0 0 3px rgba(230, 0, 103, 0.12);
+    }
+
+    .file-input-wrapper {
+      background: white; border: 1.5px solid var(--input-border); border-radius: 14px; padding: 10px 12px;
+      display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.2s;
+    }
+    .file-input-wrapper:active { background: #fffafc; }
+    .file-input-wrapper input[type="file"] { display: none; }
+    
+    .btn-choose {
+      background: #f4f4f4; border: 1px solid #ddd; padding: 6px 10px; border-radius: 8px;
+      font-size: 0.8rem; font-weight: 700; color: #333; cursor: pointer; flex-shrink: 0;
+    }
+
+    .info-status { font-size: 0.76rem; color: #777; margin-top: 6px; font-weight: 600; line-height: 1.3; }
+    .info-status.warning { color: var(--text-heading); font-weight: 700; }
+
+    .btn-main {
+      width: 100%; background: var(--gradient-btn); color: white; border: none;
+      padding: 14px; border-radius: 50px; font-size: 0.95rem; font-weight: 800;
+      cursor: pointer; box-shadow: 0 6px 18px rgba(230, 0, 103, 0.3); transition: all 0.15s ease;
+      display: flex; justify-content: center; align-items: center; gap: 6px;
+    }
+    .btn-main:active { transform: scale(0.97); }
+
+    .btn-secondary {
+      width: 100%; background: white; color: var(--text-heading); border: 1.5px solid var(--input-border);
+      padding: 10px; border-radius: 50px; font-size: 0.88rem; font-weight: 800;
+      cursor: pointer; margin-top: 8px; transition: 0.2s;
+    }
+    .btn-secondary:active { background: #fff0f5; }
+
+    .photo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
+    .photo-card {
+      background: white; border: 1.5px solid var(--input-border); border-radius: 12px; padding: 6px; text-align: center;
+    }
+    .photo-card img { width: 100%; height: 85px; object-fit: cover; border-radius: 8px; margin-bottom: 4px; }
+    .photo-card-actions { display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; padding: 0 2px; }
+
+    .result-box {
+      background: #fff; border: 1.5px solid var(--card-border); border-radius: 16px; padding: 14px;
+      margin-top: 14px; display: none; text-align: left; animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popUp {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .result-box h3 { font-size: 0.92rem; color: var(--text-heading); font-weight: 800; margin-bottom: 4px; }
+    .result-url { color: var(--primary-pink); font-weight: 800; word-break: break-all; margin-bottom: 10px; font-size: 0.85rem; }
+
+    #friend-view { display: none; text-align: center; }
+    .friend-avatar-container {
+      width: 110px; height: 110px; margin: 0 auto 12px; border-radius: 50%;
+      border: 3px solid var(--primary-pink); padding: 3px; background: white;
+      box-shadow: 0 8px 20px rgba(230, 0, 103, 0.2);
+    }
+    .friend-avatar-container img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+    .friend-wishes { font-family: 'Dancing Script', cursive; font-size: 1.5rem; color: var(--text-heading); margin-top: 12px; }
+  </style>
+</head>
+<body>
+
+  <div class="decor-orb orb-1"></div>
+  <div class="decor-orb orb-2"></div>
+
+  <div class="container">
+
+    <!-- FORM VIEW -->
+    <div id="generator-view">
+
+      <div class="card" id="form-section">
+        <div class="badge-tag">✨ INSTAGRAM & VERCEL STUDIO</div>
+        <h1>Birthday Generator</h1>
+        <p class="description">Design a modern personalized birthday experience with photos, typed letter, and shareable link.</p>
+
+        <div class="form-group">
+          <label>Birthday person name</label>
+          <input type="text" id="input-name" placeholder="Enter name">
+        </div>
+
+        <div class="form-group">
+          <label>Preferred link name (optional)</label>
+          <input type="text" id="input-slug" placeholder="custom-link-name">
+        </div>
+
+        <div class="form-group">
+          <label>Birthday date</label>
+          <input type="text" id="input-date" placeholder="DD/MM/YYYY">
+        </div>
+
+        <div class="form-group">
+          <label>Photos for slideshow (min 5, max 20, max 10MB each)</label>
+          <div class="file-input-wrapper" onclick="document.getElementById('input-photos').click()">
+            <button type="button" class="btn-choose">Choose files</button>
+            <span id="file-label" style="font-size: 0.8rem; color: #666; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">No file chosen</span>
+            <input type="file" id="input-photos" multiple accept="image/*">
+          </div>
+          <div class="info-status">Add photos in rounds. Selections stay until removed.</div>
+        </div>
+
+        <div class="form-group">
+          <label>Music track (optional)</label>
+          <div class="file-input-wrapper" onclick="document.getElementById('input-music').click()">
+            <button type="button" class="btn-choose">Choose file</button>
+            <span id="music-label" style="font-size: 0.8rem; color: #666; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">No file chosen</span>
+            <input type="file" id="input-music" accept="audio/*">
+          </div>
+          <div class="info-status warning">No custom music selected. Default song will play.</div>
+        </div>
+
+        <div id="photo-manager" style="display:none; margin-bottom: 14px;">
+          <div style="font-weight: 800; color: var(--text-heading); font-size: 0.82rem;" id="photo-count">0/20 selected</div>
+          <div class="photo-grid" id="photo-preview-grid"></div>
+        </div>
+
+        <button class="btn-main" onclick="generateLink()">✨ Generate Link</button>
+
+        <div class="result-box" id="result-box">
+          <h3>🎉 Page created:</h3>
+          <div class="result-url" id="result-url"></div>
+          <button class="btn-secondary" onclick="copyLink()">📋 Copy Link</button>
+          <button class="btn-secondary" onclick="openGeneratedPage()">🚀 Open Page</button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- FRIEND SURPRISE LANDING PAGE -->
+    <div id="friend-view" class="card">
+      <div class="friend-avatar-container">
+        <img id="friend-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80">
+      </div>
+      <h1 id="friend-name" style="font-size: 1.8rem;">Happy Birthday!</h1>
+      <div id="friend-date" style="background: var(--primary-pink); color: white; display: inline-block; padding: 4px 14px; border-radius: 16px; font-weight: 700; font-size: 0.82rem; margin: 8px 0;"></div>
+      <div class="friend-wishes" id="friend-msg"></div>
+    </div>
+
+  </div>
+
+  <script>
+    let uploadedPhotos = [];
+
+    document.getElementById('input-photos').addEventListener('change', function(e) {
+      const files = Array.from(e.target.files);
+      if (!files.length) return;
+
+      document.getElementById('file-label').innerText = `${files.length} file(s) selected`;
+      
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          uploadedPhotos.push(event.target.result);
+          renderPhotoPreviews();
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    function renderPhotoPreviews() {
+      const grid = document.getElementById('photo-preview-grid');
+      const manager = document.getElementById('photo-manager');
+      grid.innerHTML = '';
+      
+      if(uploadedPhotos.length > 0) {
+        manager.style.display = 'block';
+        document.getElementById('photo-count').innerText = `${uploadedPhotos.length}/20 selected`;
+      }
+
+      uploadedPhotos.forEach((src, idx) => {
+        const item = document.createElement('div');
+        item.className = 'photo-card';
+        item.innerHTML = `
+          <img src="${src}">
+          <div class="photo-card-actions">
+            <span style="font-weight:700; color:var(--text-heading);">Selected</span>
+            <span style="color:var(--primary-pink); cursor:pointer; font-weight:800;" onclick="removePhoto(${idx})">Remove</span>
+          </div>
+        `;
+        grid.appendChild(item);
+      });
+    }
+
+    function removePhoto(index) {
+      uploadedPhotos.splice(index, 1);
+      renderPhotoPreviews();
+    }
+
+    function generateLink() {
+      const name = document.getElementById('input-name').value.trim();
+      const slug = document.getElementById('input-slug').value.trim();
+      const date = document.getElementById('input-date').value.trim();
+
+      if (!name) {
+        alert("Please enter the birthday person's name!");
+        return;
+      }
+
+      const linkName = slug || name.toLowerCase().replace(/\s+/g, '-');
+      const baseUrl = "https://special-birthday-celebration.vercel.app/";
+      const fullUrl = `${baseUrl}?wish=${encodeURIComponent(linkName)}&name=${encodeURIComponent(name)}&date=${encodeURIComponent(date)}`;
+
+      document.getElementById('result-url').innerText = fullUrl;
+      document.getElementById('result-box').style.display = 'block';
+    }
+
+    function copyLink() {
+      const url = document.getElementById('result-url').innerText;
+      navigator.clipboard.writeText(url);
+      alert('Link copied to clipboard!');
+    }
+
+    function openGeneratedPage() {
+      const url = document.getElementById('result-url').innerText;
+      window.open(url, '_blank');
+    }
+
+    window.onload = function() {
+      const params = new URLSearchParams(window.location.search);
+      const pathname = window.location.pathname.replace('/', '');
+
+      if (params.has('wish') || pathname.length > 0) {
+        document.getElementById('generator-view').style.display = 'none';
+        document.getElementById('friend-view').style.display = 'block';
+
+        const name = params.get('name') || pathname || "Friend";
+        const date = params.get('date') || "";
+
+        document.getElementById('friend-name').innerText = `Happy Birthday, ${name}! 🎉`;
+        document.getElementById('friend-date').innerText = date;
+        document.getElementById('friend-msg').innerText = "Wishing you a magical day filled with love and laughter!";
+      }
+    };
+  </script>
+</body>
+</html>
