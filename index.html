@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memories Birthday 💖</title>
+    <title>God-Level Birthday Studio & Experience Creator 💖</title>
     <style>
+        :root {
+            --bg-color: #fcf6ed;
+            --text-color: #5c4033;
+            --accent-color: #ff3b30;
+            --card-bg: #ffffff;
+            --border-color: #ebdcc5;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -12,29 +20,143 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             user-select: none;
         }
+
         body {
-            background-color: #fcf6ed;
-            color: #5c4033;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
         }
-        .container {
+
+        .app-container {
             width: 100%;
-            max-width: 400px;
-            height: 100%;
-            max-height: 800px;
-            background-color: #fcf6ed;
+            max-width: 430px;
+            height: 100vh;
+            max-height: 880px;
+            background-color: var(--bg-color);
             position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            box-shadow: 0 0 30px rgba(0,0,0,0.08);
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
             overflow: hidden;
         }
+
+        #confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 150;
+        }
+
+        #generator-view {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            position: absolute;
+            z-index: 200;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        #generator-view.hidden {
+            transform: translateY(-100%);
+            pointer-events: none;
+        }
+
+        .gen-header {
+            padding: 18px;
+            background: #5c4033;
+            color: white;
+            text-align: center;
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .gen-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+            background: #fdfbf7;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .form-section h3 {
+            font-size: 15px;
+            margin-bottom: 12px;
+            color: #5c4033;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #7c5d52;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-color);
+        }
+
+        .btn {
+            background: #5c4033;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(92, 64, 51, 0.2);
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+            opacity: 0.85;
+        }
+
+        .btn-accent {
+            background: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+        }
+
         .screen {
             position: absolute;
             width: 100%;
@@ -43,264 +165,352 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: opacity 0.5s ease-in-out;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
             opacity: 0;
+            transform: scale(0.95);
             pointer-events: none;
             padding: 20px;
             text-align: center;
         }
+
         .screen.active {
             opacity: 1;
+            transform: scale(1);
             pointer-events: auto;
         }
+
         .heart-pulse {
-            font-size: 80px;
-            color: #ff3b30;
+            font-size: 90px;
+            color: var(--accent-color);
             cursor: pointer;
-            animation: pulse 1.2s infinite;
-            filter: drop-shadow(0 0 15px rgba(255, 59, 48, 0.4));
+            animation: godPulse 1s infinite alternate;
+            filter: drop-shadow(0 0 25px rgba(255, 59, 48, 0.6));
         }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
+
+        @keyframes godPulse {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.18) rotate(3deg); }
         }
-        .pulse-text {
-            margin-top: 20px;
-            font-size: 14px;
-            letter-spacing: 1px;
-            color: #8c6d62;
-        }
+
         .envelope-container {
             background: #f4ebd0;
             padding: 40px 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border-radius: 16px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.1);
             cursor: pointer;
-            position: relative;
             border: 1px solid #e6d7b9;
             width: 85%;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
+        .envelope-container:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+
         .envelope-seal {
-            width: 45px;
-            height: 45px;
-            background: #ff3b30;
+            width: 50px;
+            height: 50px;
+            background: var(--accent-color);
             border-radius: 50%;
             margin: 0 auto 15px auto;
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
-            font-size: 20px;
-            box-shadow: 0 4px 10px rgba(255, 59, 48, 0.3);
+            font-size: 22px;
+            box-shadow: 0 4px 15px rgba(255,59,48,0.4);
         }
+
         .letter-modal {
             background: white;
             width: 90%;
             max-height: 75vh;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
             padding: 25px;
             text-align: left;
             position: relative;
             display: flex;
             flex-direction: column;
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .letter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #f0f0f0;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
+
+        @keyframes modalPop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
+
         .letter-content {
             overflow-y: auto;
-            max-height: 50vh;
+            max-height: 48vh;
             font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.7;
             color: #4a4a4a;
             padding-right: 5px;
         }
-        .close-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-style {
-            margin-top: 15px;
-            background-color: #5c4033;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            align-self: center;
-            box-shadow: 0 4px 10px rgba(92, 64, 51, 0.2);
-        }
+
         .cake-container {
-            font-size: 100px;
+            font-size: 110px;
             cursor: grab;
             margin: 20px 0;
-            transition: transform 0.1s;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
         }
+
+        .cake-container:hover {
+            transform: scale(1.1);
+        }
+
         .lock-icon {
-            font-size: 70px;
+            font-size: 75px;
             cursor: pointer;
             margin-bottom: 15px;
-            animation: bounce 1.5s infinite;
+            animation: floatLock 1.5s ease-in-out infinite alternate;
         }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+
+        @keyframes floatLock {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-10px) rotate(-5deg); }
         }
+
         .passcode-display {
-            font-size: 24px;
-            letter-spacing: 8px;
+            font-size: 26px;
+            letter-spacing: 10px;
             margin-bottom: 20px;
-            color: #5c4033;
+            color: var(--text-color);
             min-height: 35px;
+            font-weight: bold;
         }
+
         .keypad {
             display: grid;
             grid-template-columns: repeat(3, 70px);
             gap: 12px;
             justify-content: center;
         }
+
         .key {
             background: white;
-            border: 1px solid #ebdcc5;
+            border: 1px solid var(--border-color);
             height: 55px;
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 20px;
-            color: #5c4033;
+            font-weight: 600;
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+            transition: background 0.1s, transform 0.1s;
         }
+
         .key:active {
             background: #f0e1cc;
+            transform: scale(0.92);
         }
-        .memories-title {
-            font-size: 22px;
-            margin-bottom: 5px;
-        }
-        .hint-text {
-            font-size: 13px;
-            color: #9c8275;
-            margin-bottom: 15px;
-        }
+
         .balloons-grid {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 12px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
+
         .balloon-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
         .balloon-wrapper:hover {
-            transform: scale(1.08);
+            transform: scale(1.15) translateY(-5px);
         }
+
         .balloon {
-            font-size: 55px;
-            filter: drop-shadow(0 5px 8px rgba(0,0,0,0.15));
-            animation: floatBalloon 2s ease-in-out infinite alternate;
+            font-size: 42px;
+            animation: floatB 2s ease-in-out infinite alternate;
+            filter: drop-shadow(0 6px 10px rgba(0,0,0,0.15));
         }
-        @keyframes floatBalloon {
+
+        @keyframes floatB {
             0% { transform: translateY(0); }
-            100% { transform: translateY(-8px); }
+            100% { transform: translateY(-10px); }
         }
+
         .balloon-string {
             width: 2px;
-            height: 35px;
+            height: 25px;
             background-color: #b0998c;
         }
+
         .memory-frame {
             background: white;
             padding: 15px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+            border-radius: 18px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
             width: 85%;
-            max-width: 320px;
+            max-width: 280px;
             text-align: center;
-            border: 4px solid #f4ebd0;
+            border: 4px solid var(--border-color);
+            animation: cardAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
+        @keyframes cardAppear {
+            0% { transform: scale(0.7) rotate(-5deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
         .memory-frame img {
             width: 100%;
-            height: 220px;
+            height: 170px;
             object-fit: cover;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-bottom: 10px;
         }
-        .restart-btn {
+
+        .floating-creator-btn {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            z-index: 300;
             background: #5c4033;
             color: white;
             border: none;
-            padding: 8px 20px;
-            border-radius: 15px;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
             cursor: pointer;
-            margin-top: 15px;
-            font-size: 13px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            transition: transform 0.2s;
+        }
+
+        .floating-creator-btn:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="screen active" id="screen-1" onclick="nextScreen(2)">
-        <div class="heart-pulse">❤️</div>
-        <div class="pulse-text">Tap anywhere to begin ✨</div>
+<div class="app-container" id="app">
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Generator Dashboard View -->
+    <div id="generator-view">
+        <div class="gen-header">
+            <span>✨ God-Level Birthday Studio</span>
+            <button class="btn" style="width: auto; padding: 6px 14px; font-size: 12px;" onclick="previewExperience()">Live Preview</button>
+        </div>
+        <div class="gen-body">
+            <div class="form-section">
+                <h3>Person & Relationship</h3>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="cfg-name" class="form-control" value="Ananya Sharma">
+                </div>
+                <div class="form-group">
+                    <label>Nickname</label>
+                    <input type="text" id="cfg-nickname" class="form-control" value="Anu">
+                </div>
+                <div class="form-group">
+                    <label>Age Turning</label>
+                    <input type="number" id="cfg-age" class="form-control" value="19">
+                </div>
+                <div class="form-group">
+                    <label>Sender Name</label>
+                    <input type="text" id="cfg-sender" class="form-control" value="Your Partner">
+                </div>
+                <div class="form-group">
+                    <label>Relationship</label>
+                    <select id="cfg-relationship" class="form-control">
+                        <option value="Best Friend">Best Friend</option>
+                        <option value="Sister">Sister</option>
+                        <option value="Partner" selected>Partner</option>
+                        <option value="Husband">Husband</option>
+                        <option value="Wife">Wife</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Personal Messages & Letter</h3>
+                <div class="form-group">
+                    <label>Short Birthday Wish</label>
+                    <input type="text" id="cfg-shortwish" class="form-control" value="Happiest birthday my gurll 👩‍💻🎂">
+                </div>
+                <div class="form-group">
+                    <label>Letter / Main Message</label>
+                    <textarea id="cfg-letter" class="form-control" rows="4">I pray you achieve all your dreams, stay happy, and keep smiling the way you do because that smile is my favorite thing. Everyday is your day because you are the main character and YOU KNOW IT!</textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Security & Passcode</h3>
+                <div class="form-group">
+                    <label>Custom Passcode (Numbers)</label>
+                    <input type="text" id="cfg-passcode" class="form-control" value="2026" maxlength="4">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Photos (Up to 6 URLs)</h3>
+                <div class="form-group"><label>Photo URL 1</label><input type="text" id="cfg-photo1" class="form-control" value="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80"></div>
+                <div class="form-group"><label>Photo URL 2</label><input type="text" id="cfg-photo2" class="form-control" value="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=500&q=80"></div>
+                <div class="form-group"><label>Photo URL 3</label><input type="text" id="cfg-photo3" class="form-control" value="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80"></div>
+                <div class="form-group"><label>Photo URL 4</label><input type="text" id="cfg-photo4" class="form-control" value="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=500&q=80"></div>
+                <div class="form-group"><label>Photo URL 5</label><input type="text" id="cfg-photo5" class="form-control" value=""></div>
+                <div class="form-group"><label>Photo URL 6</label><input type="text" id="cfg-photo6" class="form-control" value=""></div>
+            </div>
+
+            <button class="btn btn-accent" onclick="generateBirthdayLink()" style="margin-bottom: 30px;">Generate Boss-Level Birthday Link 🚀</button>
+        </div>
+    </div>
+
+    <!-- Experience Mode Screens -->
+    <div class="screen active" id="screen-1" onclick="triggerGodPulse(); nextScreen(2)">
+        <div class="heart-pulse" id="exp-heart">❤️</div>
+        <div style="margin-top: 15px; font-size: 14px; color: #8c6d62; font-weight: 600;">Tap anywhere to begin ✨</div>
     </div>
 
     <div class="screen" id="screen-2">
         <div style="margin-bottom: 20px;">
             <h3 style="font-size: 20px; margin-bottom: 5px;">A Letter, Just For You</h3>
-            <p class="hint-text">Tap the envelope to unseal</p>
+            <p style="font-size: 13px; color: #9c8275;">Tap the envelope to unseal</p>
         </div>
         <div class="envelope-container" onclick="openLetterModal()">
             <div class="envelope-seal">❤️</div>
-            <p style="font-weight: 600; font-size: 15px;">For You, My Cutuuu</p>
+            <p id="exp-envelope-title" style="font-weight: 600; font-size: 15px;">For You, My Love</p>
             <p style="font-size: 12px; color: #9c8275; margin-top: 5px;">TAP TO UNSEAL ♡</p>
         </div>
     </div>
 
-    <div class="screen" id="screen-letter-modal" style="background: rgba(0,0,0,0.2);">
+    <div class="screen" id="screen-letter-modal" style="background: rgba(0,0,0,0.3); backdrop-filter: blur(5px);">
         <div class="letter-modal">
-            <div class="letter-header">
-                <div>
-                    <h3 style="font-size: 18px;">Happy Birthday ✨</h3>
-                    <p style="font-size: 11px; color: #888;">just for you ♡</p>
-                </div>
-                <button class="close-btn" onclick="closeLetterModal()" style="font-size: 18px; color: #888;">×</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; margin-bottom: 15px;">
+                <h3 id="exp-modal-heading" style="font-size: 18px;">Happy Birthday ✨</h3>
+                <button onclick="closeLetterModal()" style="background:none; border:none; font-size:20px; cursor:pointer; color: #888;">×</button>
             </div>
-            <div class="letter-content" id="dynamic-message">
-                Happiest birthday my gurll 👩‍💻🎂<br><br>
-                I pray you achieve all your dreams, stay happy, and keep smiling the way you do...<br><br>
-                because that smile is my favorite thing 🫶
+            <div class="letter-content" id="exp-letter-text">
+                Loading personal message...
             </div>
-            <button class="btn-style" onclick="nextScreen(3)">Next →</button>
+            <button class="btn" style="margin-top: 15px;" onclick="nextScreen(3)">Next →</button>
         </div>
     </div>
 
     <div class="screen" id="screen-3">
         <h3 style="font-size: 20px; margin-bottom: 5px;">Swipe to Cut the Cake! 🎂</h3>
-        <p class="hint-text">Drag or swipe across the cake to slice</p>
+        <p style="font-size: 13px; color: #9c8275;">Drag or tap across the cake</p>
         <div class="cake-container" id="cake" onmousedown="sliceCake()" ontouchstart="sliceCake()">🎂</div>
     </div>
 
     <div class="screen" id="screen-4">
-        <h2 style="font-size: 24px; margin-bottom: 15px; color: #5c4033;">Happy Birthday,<br>My Girl! 💕</h2>
+        <h2 id="exp-celebration-title" style="font-size: 24px; margin-bottom: 15px;">Happy Birthday! 💕</h2>
         <div style="font-size: 80px; margin-bottom: 15px;">🍰</div>
-        <button class="btn-style" onclick="nextScreen(5)">Next →</button>
+        <button class="btn" onclick="nextScreen(5)">Next →</button>
     </div>
 
     <div class="screen" id="screen-5" onclick="nextScreen(6)">
@@ -309,7 +519,7 @@
     </div>
 
     <div class="screen" id="screen-6">
-        <p style="font-size: 16px; margin-bottom: 5px; color: #7c5d52;">Enter Passcode</p>
+        <p style="font-size: 16px; margin-bottom: 5px;" id="exp-passcode-label">Enter Passcode</p>
         <div class="passcode-display" id="passcode-display">____</div>
         <div class="keypad">
             <div class="key" onclick="pressKey('1')">1</div>
@@ -330,111 +540,289 @@
     <div class="screen" id="screen-7">
         <div style="font-size: 60px; margin-bottom: 10px;">🔓</div>
         <h3 style="font-size: 20px; margin-bottom: 5px;">Correct Passkey ✨</h3>
-        <p class="hint-text">Here Your Special Memories Await...</p>
-        <button class="btn-style" onclick="nextScreen(8)">View Memories</button>
+        <p style="font-size: 13px; color: #9c8275;">God-Level Memories Unlocked...</p>
+        <button class="btn" onclick="nextScreen(8)">View Memories</button>
     </div>
 
     <div class="screen" id="screen-8">
-        <h3 class="memories-title">✨ Memories</h3>
-        <p class="hint-text">Tap a balloon to pop open a memory! 🎈</p>
+        <h3 style="font-size: 22px; margin-bottom: 5px;">🎬 Dynamic Memories</h3>
+        <p style="font-size: 13px; color: #9c8275; margin-bottom: 12px;">Tap a balloon to reveal! 🎈</p>
         
-        <div class="balloons-grid">
-            <div class="balloon-wrapper" onclick="showMemory(0)">
-                <div class="balloon">🎈</div>
-                <div class="balloon-string"></div>
-            </div>
-            <div class="balloon-wrapper" onclick="showMemory(1)">
-                <div class="balloon">🎈</div>
-                <div class="balloon-string"></div>
-            </div>
-            <div class="balloon-wrapper" onclick="showMemory(2)">
-                <div class="balloon">🎈</div>
-                <div class="balloon-string"></div>
-            </div>
+        <div class="balloons-grid" id="balloons-container">
+            <!-- Dynamically populated up to 6 -->
         </div>
 
-        <div id="memory-display-area" style="min-height: 270px; display: flex; justify-content: center; align-items: center; width: 100%;">
-            <p style="color: #b0998c; font-style: italic; font-size: 14px;">(Select a balloon above to reveal)</p>
+        <div id="memory-display-area" style="min-height: 230px; display: flex; justify-content: center; align-items: center; width: 100%;">
+            <p style="color: #b0998c; font-style: italic; font-size: 13px;">(Tap a balloon above)</p>
         </div>
 
-        <button class="restart-btn" onclick="restartApp()">Restart Experience</button>
+        <button class="btn" style="margin-top: 10px; width: auto; padding: 8px 16px; font-size: 12px;" onclick="restartApp()">Replay Experience</button>
     </div>
+
+    <button class="floating-creator-btn" onclick="openGenerator()">⚙️ Open Studio</button>
 </div>
 
 <script>
-    let currentPasscode = "";
-    let correctCode = "2026";
-    let memories = [
-        { img: "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=500&q=80", caption: "✨ Cherished moments!" },
-        { img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80", caption: "💖 Special Memory" },
-        { img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=500&q=80", caption: "🎬 Unforgettable times" }
-    ];
+    let currentConfig = {
+        name: "Ananya Sharma",
+        nickname: "Anu",
+        age: 19,
+        sender: "Your Partner",
+        relationship: "Partner",
+        shortwish: "Happiest birthday my gurll 👩‍💻🎂",
+        letter: "I pray you achieve all your dreams, stay happy, and keep smiling the way you do because that smile is my favorite thing.",
+        passcode: "2026",
+        photos: [
+            "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=500&q=80",
+            "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=500&q=80"
+        ]
+    };
 
-    // Fetch dynamic data if unique ID exists in path (e.g. /view/xyz123)
-    async function loadDynamicData() {
-        const pathSegments = window.location.pathname.split('/');
-        const uniqueId = pathSegments[pathSegments.length - 1];
-        if (uniqueId && uniqueId.length > 5) {
-            try {
-                const res = await fetch(`/api/birthday/${uniqueId}`);
-                const data = await res.json();
-                if (data) {
-                    if(data.message) document.getElementById('dynamic-message').innerHTML = data.message;
-                    if(data.passcode) correctCode = data.passcode;
-                    if(data.photos && data.photos.length > 0) {
-                        memories = data.photos.map((url, idx) => ({
-                            img: url,
-                            caption: `✨ Special Memory #${idx + 1}`
-                        }));
-                    }
-                }
-            } catch (e) {
-                console.log("Using default fallback data");
+    let enteredPasscode = "";
+
+    // God-level Canvas Confetti Engine
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+        canvas.width = canvas.parentElement.clientWidth;
+        canvas.height = canvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function triggerConfetti() {
+        particles = [];
+        const colors = ['#ff3b30', '#ff9500', '#4cd964', '#5ac8fa', '#007aff', '#5856d6', '#ff2d55'];
+        for (let i = 0; i < 120; i++) {
+            particles.push({
+                x: canvas.width / 2,
+                y: canvas.height / 2,
+                vx: (Math.random() - 0.5) * 12,
+                vy: (Math.random() - 0.7) * 14,
+                size: Math.random() * 8 + 4,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                rotation: Math.random() * 360,
+                vRot: (Math.random() - 0.5) * 15,
+                gravity: 0.35,
+                opacity: 1
+            });
+        }
+        requestAnimationFrame(updateConfetti);
+    }
+
+    function updateConfetti() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let activeParticles = false;
+
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += p.gravity;
+            p.rotation += p.vRot;
+            p.opacity -= 0.008;
+
+            if (p.opacity > 0) {
+                activeParticles = true;
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate((p.rotation * Math.PI) / 180);
+                ctx.globalAlpha = p.opacity;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+                ctx.restore();
             }
+        });
+
+        if (activeParticles) {
+            requestAnimationFrame(updateConfetti);
         }
     }
-    window.onload = loadDynamicData;
+
+    function triggerGodPulse() {
+        triggerConfetti();
+    }
+
+    function loadConfigFromHash() {
+        if (window.location.hash.includes("#birthday=")) {
+            try {
+                const encoded = window.location.hash.replace("#birthday=", "");
+                const decoded = JSON.parse(atob(encoded));
+                currentConfig = { ...currentConfig, ...decoded };
+                document.getElementById("generator-view").classList.add("hidden");
+            } catch(e) {
+                console.error("Invalid URL state hash");
+            }
+        }
+        applyConfigToExperience();
+    }
+
+    function applyConfigToExperience() {
+        document.getElementById("exp-envelope-title").innerText = `For You, ${currentConfig.nickname || currentConfig.name}`;
+        document.getElementById("exp-modal-heading").innerText = `Happy Birthday ${currentConfig.nickname || currentConfig.name} ✨`;
+        document.getElementById("exp-letter-text").innerHTML = `${currentConfig.shortwish}<br><br>${currentConfig.letter}<br><br>With boss-level love, ${currentConfig.sender}`;
+        document.getElementById("exp-celebration-title").innerHTML = `Happy Birthday,<br>${currentConfig.name}! 💕`;
+
+        // Render Balloons dynamically based on available photos (up to 6)
+        const balloonsContainer = document.getElementById("balloons-container");
+        balloonsContainer.innerHTML = "";
+        const photoCount = Math.min(currentConfig.photos.length, 6);
+        for(let i = 0; i < photoCount; i++) {
+            balloonsContainer.innerHTML += `
+                <div class="balloon-wrapper" onclick="showMemory(${i})">
+                    <div class="balloon">🎈</div>
+                    <div class="balloon-string"></div>
+                </div>
+            `;
+        }
+    }
+
+    function generateBirthdayLink() {
+        currentConfig.name = document.getElementById("cfg-name").value;
+        currentConfig.nickname = document.getElementById("cfg-nickname").value;
+        currentConfig.age = document.getElementById("cfg-age").value;
+        currentConfig.sender = document.getElementById("cfg-sender").value;
+        currentConfig.relationship = document.getElementById("cfg-relationship").value;
+        currentConfig.shortwish = document.getElementById("cfg-shortwish").value;
+        currentConfig.letter = document.getElementById("cfg-letter").value;
+        currentConfig.passcode = document.getElementById("cfg-passcode").value;
+
+        const rawPhotos = [
+            document.getElementById("cfg-photo1").value,
+            document.getElementById("cfg-photo2").value,
+            document.getElementById("cfg-photo3").value,
+            document.getElementById("cfg-photo4").value,
+            document.getElementById("cfg-photo5").value,
+            document.getElementById("cfg-photo6").value
+        ];
+        currentConfig.photos = rawPhotos.filter(url => url.trim() !== "");
+
+        applyConfigToExperience();
+
+        const jsonStr = JSON.stringify(currentConfig);
+        const encoded = btoa(jsonStr);
+        const generatedUrl = window.location.origin + window.location.pathname + "#birthday=" + encoded;
+
+        navigator.clipboard.writeText(generatedUrl).then(() => {
+            alert("Boss-Level Birthday link generated and copied successfully! 🚀\n\nURL: " + generatedUrl);
+            document.getElementById("generator-view").classList.add("hidden");
+            restartApp();
+            triggerConfetti();
+        });
+    }
+
+    function previewExperience() {
+        currentConfig.name = document.getElementById("cfg-name").value;
+        currentConfig.nickname = document.getElementById("cfg-nickname").value;
+        currentConfig.age = document.getElementById("cfg-age").value;
+        currentConfig.sender = document.getElementById("cfg-sender").value;
+        currentConfig.relationship = document.getElementById("cfg-relationship").value;
+        currentConfig.shortwish = document.getElementById("cfg-shortwish").value;
+        currentConfig.letter = document.getElementById("cfg-letter").value;
+        currentConfig.passcode = document.getElementById("cfg-passcode").value;
+
+        const rawPhotos = [
+            document.getElementById("cfg-photo1").value,
+            document.getElementById("cfg-photo2").value,
+            document.getElementById("cfg-photo3").value,
+            document.getElementById("cfg-photo4").value,
+            document.getElementById("cfg-photo5").value,
+            document.getElementById("cfg-photo6").value
+        ];
+        currentConfig.photos = rawPhotos.filter(url => url.trim() !== "");
+
+        applyConfigToExperience();
+        document.getElementById("generator-view").classList.add("hidden");
+        restartApp();
+        triggerConfetti();
+    }
+
+    function openGenerator() {
+        document.getElementById("generator-view").classList.remove("hidden");
+    }
 
     function nextScreen(num) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(`screen-${num}`).classList.add('active');
+        if(num === 4 || num === 7) {
+            triggerConfetti();
+        }
     }
-    function openLetterModal() { document.getElementById('screen-letter-modal').classList.add('active'); }
-    function closeLetterModal() { document.getElementById('screen-letter-modal').classList.remove('active'); }
+
+    function openLetterModal() {
+        document.getElementById('screen-letter-modal').classList.add('active');
+        triggerConfetti();
+    }
+
+    function closeLetterModal() {
+        document.getElementById('screen-letter-modal').classList.remove('active');
+    }
+
     function sliceCake() {
         const cake = document.getElementById('cake');
-        cake.style.transform = "scale(0.8) rotate(10deg)";
-        setTimeout(() => { cake.style.transform = "scale(1) rotate(0deg)"; nextScreen(4); }, 300);
+        cake.style.transform = "scale(0.8) rotate(15deg)";
+        triggerConfetti();
+        setTimeout(() => {
+            cake.style.transform = "scale(1) rotate(0deg)";
+            nextScreen(4);
+        }, 350);
     }
+
     function pressKey(val) {
-        if (val === 'del') currentPasscode = currentPasscode.slice(0, -1);
-        else if (val === 'ok') { checkPasscode(); return; }
-        else if (currentPasscode.length < 4) currentPasscode += val;
-        
+        if (val === 'del') {
+            enteredPasscode = enteredPasscode.slice(0, -1);
+        } else if (val === 'ok') {
+            checkPasscode();
+            return;
+        } else if (enteredPasscode.length < 4) {
+            enteredPasscode += val;
+        }
+
         let displayStr = "";
-        for (let i = 0; i < 4; i++) displayStr += i < currentPasscode.length ? "•" : "_";
+        for (let i = 0; i < 4; i++) {
+            displayStr += i < enteredPasscode.length ? "•" : "_";
+        }
         document.getElementById('passcode-display').innerText = displayStr;
-        if (currentPasscode.length === 4) setTimeout(checkPasscode, 300);
+
+        if (enteredPasscode.length === 4) {
+            setTimeout(checkPasscode, 300);
+        }
     }
+
     function checkPasscode() {
-        if (currentPasscode === correctCode) nextScreen(7);
-        else { alert("Incorrect passkey!"); currentPasscode = ""; pressKey(''); }
+        if (enteredPasscode === currentConfig.passcode) {
+            triggerConfetti();
+            nextScreen(7);
+        } else {
+            alert("Incorrect passkey! Try " + currentConfig.passcode);
+            enteredPasscode = "";
+            pressKey('');
+        }
     }
+
     function showMemory(index) {
-        const memory = memories[index] || memories[0];
+        const photoUrl = currentConfig.photos[index] || currentConfig.photos[0];
         document.getElementById('memory-display-area').innerHTML = `
             <div class="memory-frame">
-                <img src="${memory.img}" alt="Memory">
-                <p style="font-size: 13px; font-weight: 600; color: #5c4033;">${memory.caption}</p>
+                <img src="${photoUrl}" alt="Memory">
+                <p style="font-size: 13px; font-weight: 600; color: #5c4033;">✨ Memory #${index + 1}</p>
             </div>
         `;
+        triggerConfetti();
     }
+
     function restartApp() {
-        currentPasscode = "";
+        enteredPasscode = "";
         pressKey('');
-        document.getElementById('memory-display-area').innerHTML = '<p style="color: #b0998c; font-style: italic; font-size: 14px;">(Select a balloon above to reveal)</p>';
+        document.getElementById('memory-display-area').innerHTML = '<p style="color: #b0998c; font-style: italic; font-size: 13px;">(Tap a balloon above)</p>';
         nextScreen(1);
     }
+
+    window.onload = loadConfigFromHash;
 </script>
+
 </body>
 </html>
