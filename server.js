@@ -1,60 +1,89 @@
-require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
+const shortid = require('shortid');
 const cors = require('cors');
-const helmet = require('helmet');
+const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('cloudinary').v2;
 const path = require('path');
-const fs = require('fs');
-const db = require('./api/database');
-const { rateLimiter } = require('./api/middleware');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Middleware
-app.use(helmet());
+app.use(express.json());
 app.use(cors());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(express.static(path.join(__dirname)));
 
-// Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, process.env.UPLOAD_DIR || 'uploads')));
+// MongoDB Connection Connection String
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/birthdayDB';
+mongoose.connect(MONGO_URI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
-// Initialize database
-db.init();
-
-// Routes
-const createRoutes = require('./api/create');
-const birthdayRoutes = require('./api/birthday');
-
-app.use('/api/create', rateLimiter, createRoutes);
-app.use('/api/birthday', birthdayRoutes);
-
-// Serve frontend
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+// Cloudinary Configuration
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'your_cloud_name',
+  api_key: process.env.CLOUDINARY_API_KEY || 'your_api_key',
+  api_secret: process.env.CLOUDINARY_API_SECRET || 'your_api_secret'
 });
 
-app.get('/birthday/:id', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'birthday-app-photos',
+    allowed_formats: ['jpg', 'png', 'jpeg']
+  }
+});
+const upload = multer({ storage: storage });
+
+// Database Schema
+const BirthdaySchema = new mongoose.Schema({
+    uniqueId: { type: String, unique: true, default: shortid.generate },
+    recipientName: String,
+    message: String,
+    photos: [String],
+    theme: String,
+    passcode: String,
+    createdAt: { type: Date, default: Date.now }
 });
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ success: false, message: 'Not found' });
+const BirthdayPage = mongoose.model('BirthdayPage', BirthdaySchema);
+
+// API Endpoint to Create Birthday Page with Image Uploads
+app.post('/api/create', upload.array('photos', 5), async (req, res) => {
+    try {
+        const photoUrls = req.files ? req.files.map(file => file.path) : [];
+        const newPage = new BirthdayPage({
+            recipientName: req.body.recipientName,
+            message: req.body.message,
+            photos: photoUrls,
+            theme: req.body.theme || 'bollywood',
+            passcode: req.body.passcode || '2026'
+        });
+        
+        const savedPage = await newPage.save();
+        res.status(201).json({ 
+            success: true, 
+            shareableLink: `/view/${savedPage.uniqueId}` 
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
 });
 
-// Error handler
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(err.status || 500).json({
-    success: false,
-    message: process.env.NODE_ENV === 'production' ? 'Server error' : err.message
-  });
+// API Endpoint to Fetch Birthday Data by Unique ID
+app.get('/api/birthday/:id', async (req, res) => {
+    try {
+        const pageData = await BirthdayPage.findOne({ uniqueId: req.params.id });
+        if (!pageData) return res.status(404).json({ error: "Page not found" });
+        res.json(pageData);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
-app.listen(PORT, () => {
-  console.log(`🎉 Birthday Generator running at http://localhost:${PORT}`);
-  console.log(`📁 Database: ${process.env.DB_PATH || './data/birthday.db'}`);
-  console.log(`📷 Uploads: ${process.env.UPLOAD_DIR || './uploads'}`);
+// Catch-all route to serve index.html for custom links
+app.get('/view/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
