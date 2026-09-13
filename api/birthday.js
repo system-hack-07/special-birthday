@@ -1,12 +1,10 @@
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY =
-  process.env.SUPABASE_SERVICE_ROLE_KEY;
+const { put, list } = require("@vercel/blob");
 
-function json(res, status, data) {
+function send(res, status, data) {
   res.status(status).json(data);
 }
 
-function makeId(length = 7) {
+function generateId(length = 7) {
   const chars =
     "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
 
@@ -19,54 +17,17 @@ function makeId(length = 7) {
   return id;
 }
 
-async function supabase(path, options = {}) {
-  const response = await fetch(
-    `${SUPABASE_URL}/rest/v1/${path}`,
-    {
-      ...options,
-      headers: {
-        apikey: SUPABASE_SERVICE_ROLE_KEY,
-        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
-        "Content-Type": "application/json",
-        Prefer: "return=representation",
-        ...(options.headers || {})
-      }
-    }
-  );
-
-  const text = await response.text();
-
-  let data;
-
-  try {
-    data = text ? JSON.parse(text) : null;
-  } catch {
-    data = text;
-  }
-
-  if (!response.ok) {
-    throw new Error(
-      typeof data === "string"
-        ? data
-        : JSON.stringify(data)
-    );
-  }
-
-  return data;
+function validId(id) {
+  return /^[A-Za-z0-9]{7}$/.test(id);
 }
 
-module.exports = async (req, res) => {
+module.exports = async function handler(req, res) {
   try {
-    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      return json(res, 500, {
-        success: false,
-        error: "Supabase environment variables are missing."
-      });
-    }
-
     /*
-      CREATE
-      POST /api/birthday
+    =====================================================
+    CREATE BIRTHDAY
+    POST /api/birthday
+    =====================================================
     */
 
     if (req.method === "POST") {
@@ -76,86 +37,132 @@ module.exports = async (req, res) => {
           : req.body;
 
       if (!body || typeof body !== "object") {
-        return json(res, 400, {
+        return send(res, 400, {
           success: false,
           error: "Invalid birthday data."
         });
       }
 
-      let shortId = makeId();
+      let id = generateId();
 
-      // Extremely unlikely collision protection
-      for (let attempt = 0; attempt < 5; attempt++) {
-        const existing = await supabase(
-          `birthdays?short_id=eq.${encodeURIComponent(shortId)}&select=id`,
-          { method: "GET" }
-        );
+      /*
+      Store the complete birthday configuration
+      in Vercel Blob.
 
-        if (!existing || existing.length === 0) break;
+      The ID is the filename, not the birthday data.
+      */
 
-        shortId = makeId();
-      }
+      const record = {
+        id,
+        createdAt: new Date().toISOString(),
+        data: body
+      };
 
-      const result = await supabase("birthdays", {
-        method: "POST",
-        body: JSON.stringify({
-          short_id: shortId,
-          data: body
-        })
-      });
+      await put(
+        `birthdays/${id}.json`,
+        JSON.stringify(record),
+        {
+          access: "public",
+          contentType: "application/json",
+          addRandomSuffix: false
+        }
+      );
 
-      return json(res, 200, {
+      const origin =
+        req.headers["x-forwarded-proto"] +
+        "://" +
+        req.headers["x-forwarded-host"];
+
+      const fallbackOrigin =
+        `https://${req.headers.host}`;
+
+      const base =
+        origin &&
+        origin.includes("://")
+          ? origin
+          : fallbackOrigin;
+
+      return send(res, 200, {
         success: true,
-        id: shortId
+        id,
+        url: `${base}/b/${id}`
       });
     }
 
     /*
-      READ
-      GET /api/birthday?id=A7k92X
+    =====================================================
+    READ BIRTHDAY
+    GET /api/birthday?id=A7k92X
+    =====================================================
     */
 
     if (req.method === "GET") {
-      const id = String(req.query?.id || "").trim();
+      const id =
+        String(req.query?.id || "").trim();
 
-      if (!id || !/^[A-Za-z0-9]{4,20}$/.test(id)) {
-        return json(res, 400, {
+      if (!validId(id)) {
+        return send(res, 400, {
           success: false,
-          error: "Invalid birthday ID."
+          error: "Invalid birthday link."
         });
       }
 
-      const result = await supabase(
-        `birthdays?short_id=eq.${encodeURIComponent(id)}&select=data,created_at&limit=1`,
-        { method: "GET" }
-      );
+      /*
+      Find the exact Blob.
+      */
 
-      if (!result || result.length === 0) {
-        return json(res, 404, {
+      const result = await list({
+        prefix: `birthdays/${id}.json`,
+        limit: 1
+      });
+
+      if (
+        !result ||
+        !result.blobs ||
+        result.blobs.length === 0
+      ) {
+        return send(res, 404, {
           success: false,
           error: "Birthday celebration not found."
         });
       }
 
-      return json(res, 200, {
+      const blob = result.blobs[0];
+
+      const response =
+        await fetch(blob.url);
+
+      if (!response.ok) {
+        return send(res, 404, {
+          success: false,
+          error: "Birthday data unavailable."
+        });
+      }
+
+      const record =
+        await response.json();
+
+      return send(res, 200, {
         success: true,
         id,
-        data: result[0].data,
-        created_at: result[0].created_at
+        data: record.data,
+        createdAt: record.createdAt
       });
     }
 
-    return json(res, 405, {
+    return send(res, 405, {
       success: false,
       error: "Method not allowed."
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("Birthday API error:", error);
 
-    return json(res, 500, {
+    return send(res, 500, {
       success: false,
-      error: "Server error."
+      error:
+        error?.message ||
+        "Internal server error."
     });
   }
 };
