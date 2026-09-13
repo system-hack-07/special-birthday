@@ -2,7 +2,7 @@
   "name": "special-birthday-celebration",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "dev": "vercel dev"
+  "dependencies": {
+    "@vercel/blob": "^2.0.0"
   }
 }
